@@ -1146,6 +1146,7 @@ class Project_pango(Tarball, Project):
             'pango',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz',
             dependencies = ['cairo', 'harfbuzz'],
+            patches = ['read-pango-aliases-file.patch'],
             )
 
     def build(self):
