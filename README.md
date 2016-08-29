@@ -17,7 +17,7 @@ HexChat developers decided that their script should focus on their specific need
 1. Install the following build tools and dependencies:
 
     * [Visual Studio 2013 Express for Windows Desktop](http://www.visualstudio.com/downloads/download-visual-studio-vs#d-2013-express) - Any version of VS apart from 2013 is not supported.
-    * [CMake 3.0.2](http://www.cmake.org/download/) (also works with CMake 2.8.x)
+    * [CMake 3.5.2](http://www.cmake.org/download/)
     * [msys2](https://msys2.github.io/)
     * Perl 5.20 [x86](https://dl.hexchat.net/misc/perl/perl-5.20.0-x86.7z) or [x64](https://dl.hexchat.net/misc/perl/perl-5.20.0-x64.7z) (extract to _C:\perl_)
     * [Python 2.7](https://www.python.org/ftp/python/2.7.9/python-2.7.9.amd64.msi) (install in C:\Python27), or other package like [Miniconda 2.7](https://repo.continuum.io/miniconda/Miniconda2-latest-Windows-x86_64.exe)
@@ -31,7 +31,7 @@ HexChat developers decided that their script should focus on their specific need
     pacman -S gzip nasm patch tar xz gettext make coreutils diffutils wget yasm pkg-config
     ```
 
-1. Clone [this repository](https://github.com/wingtk/gtk-win32) to _C:\gtk-build\github\gtk-win32_ It contains the build script, project files and patches.
+1. Clone [this repository](https://github.com/hsccr/gtk-win32) to _C:\gtk-build\github\gtk-win32_ It contains the build script, project files and patches.
 
 1. Now start a command-line window as a regular user. Go to the _gtk-win32_ directory and start building with the script. For example, to build 32-bit GTK+ 3 and its dependencies, run:
 
@@ -45,6 +45,20 @@ HexChat developers decided that their script should focus on their specific need
     ```
     cd C:\gtk-build\github\gtk-win32
     python .\build.py build -p x64 gtk3
+    ```
+
+    To build debug or release , run:
+
+    ```
+    cd C:\gtk-build\github\gtk-win32
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug
+    ```
+    or
+    ```
+    start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug
     ```
 
     For more information about the possible commands. Run
