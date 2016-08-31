@@ -1,0 +1,41 @@
+diff --git a/clutter.orig/win32/clutter-event-win32.c b/clutter/win32/clutter-event-win32.c
+index 7a360c6..6b1fedc 100644
+--- a/clutter.orig/win32/clutter-event-win32.c
++++ b/clutter/win32/clutter-event-win32.c
+@@ -288,7 +288,10 @@ clutter_event_dispatch (GSource     *source,
+      the clutter event queue */
+   while (!clutter_events_pending () && PeekMessageW (&msg, NULL,
+ 						     0, 0, PM_REMOVE))
++    {
++      TranslateMessage (&msg); /* needed for WM_IME_CHAR */
+       DispatchMessageW (&msg);
++    }
+ 
+   /* Pop an event off the queue if any */
+   if ((event = clutter_event_get ()))
+@@ -582,6 +585,25 @@ clutter_win32_handle_event (const MSG *msg)
+       }
+       break;
+ 
++    case WM_IME_CHAR:
++      {
++        ClutterEvent *event = clutter_event_new (CLUTTER_KEY_PRESS);
++        BYTE key_states[256];
++
++        GetKeyboardState (key_states);
++
++        event->key.keyval = CLUTTER_KEY_VoidSymbol;
++        event->key.unicode_value = msg->wParam;
++        event->key.time = msg->time;
++        event->key.modifier_state = get_key_modifier_state (key_states);
++        event->key.hardware_keycode = (msg->lParam >> 16) & 0xff;
++        event->any.stage = stage;
++
++        clutter_event_set_device (event, core_keyboard);
++        take_and_queue_event (event);
++      }
++      break;
++
+     case WM_MOUSELEAVE:
+       {
+         ClutterEvent *event = clutter_event_new (CLUTTER_LEAVE);
