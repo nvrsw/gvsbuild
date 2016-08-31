@@ -274,6 +274,7 @@ class Project_clutter(Tarball, Project):
             'clutter',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.0.tar.xz',
             dependencies = ['atk','cogl','json-glib'],
+            patches = ['001-input-method-editor.patch'],
             )
 
     def build(self):
