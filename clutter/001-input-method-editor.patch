@@ -1,5 +1,5 @@
 diff --git a/clutter.orig/win32/clutter-event-win32.c b/clutter/win32/clutter-event-win32.c
-index 7a360c6..6b1fedc 100644
+index 7a360c6..c2b0c07 100644
 --- a/clutter.orig/win32/clutter-event-win32.c
 +++ b/clutter/win32/clutter-event-win32.c
 @@ -288,7 +288,10 @@ clutter_event_dispatch (GSource     *source,
@@ -13,10 +13,15 @@ index 7a360c6..6b1fedc 100644
  
    /* Pop an event off the queue if any */
    if ((event = clutter_event_get ()))
-@@ -582,6 +585,25 @@ clutter_win32_handle_event (const MSG *msg)
+@@ -582,6 +585,30 @@ clutter_win32_handle_event (const MSG *msg)
        }
        break;
  
++    case WM_IME_SETCONTEXT:
++      DefWindowProcW (msg->hwnd, msg->message, msg->wParam, 0);
++      return_value = TRUE;
++      break;
++
 +    case WM_IME_CHAR:
 +      {
 +        ClutterEvent *event = clutter_event_new (CLUTTER_KEY_PRESS);
