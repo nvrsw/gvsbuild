@@ -202,7 +202,7 @@ class Project_adwaita_icon_theme(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'adwaita-icon-theme',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/adwaita-icon-theme/3.20/adwaita-icon-theme-3.20.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/adwaita-icon-theme/3.22/adwaita-icon-theme-3.22.0.tar.xz',
             dependencies = ['librsvg'],
             )
 
@@ -220,7 +220,7 @@ class Project_atk(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'atk',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/atk/2.20/atk-2.20.0.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/atk/2.22/atk-2.22.0.tar.xz',
             dependencies = ['glib'],
             )
 
@@ -397,7 +397,7 @@ class Project_fontconfig(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'fontconfig',
-            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.0.tar.gz',
+            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.gz',
             dependencies = ['freetype', 'libxml2'],
             patches = ['fontconfig.patch'],
             )
@@ -440,7 +440,7 @@ class Project_freetype(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'freetype',
-            archive_url = 'http://download.savannah.gnu.org/releases/freetype/freetype-2.6.3.tar.bz2',
+            archive_url = 'http://download.savannah.gnu.org/releases/freetype/freetype-2.7.tar.gz',
             )
 
     def build(self):
@@ -455,7 +455,7 @@ class Project_gdk_pixbuf(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'gdk-pixbuf',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.34/gdk-pixbuf-2.34.0.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.36/gdk-pixbuf-2.36.0.tar.xz',
             dependencies = ['glib', 'libpng'],
             )
 
@@ -496,7 +496,7 @@ class Project_glib(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'glib',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.48/glib-2.48.2.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.50/glib-2.50.2.tar.xz',
             dependencies = ['gettext', 'libffi', 'zlib'],
             patches = ['glib-if_nametoindex.patch',
                        'glib-package-installation-directory.patch'],
@@ -516,7 +516,7 @@ class Project_glib_networking(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'glib-networking',
-            archive_url = 'https://github.com/wingtk/glib-networking/releases/download/2.48.3-openssl/glib-networking-2.48.3.tar.xz',
+            archive_url = 'https://github.com/wingtk/glib-networking/releases/download/2.50.0-openssl/glib-networking-2.50.0.tar.xz',
             dependencies = ['gsettings-desktop-schemas', 'openssl'],
             )
 
@@ -526,13 +526,28 @@ class Project_glib_networking(Tarball, Project):
 
 Project.add(Project_glib_networking())
 
+class Project_glib_openssl(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'glib-openssl',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib-openssl/2.50/glib-openssl-2.50.0.tar.xz',
+            dependencies = ['glib', 'openssl'],
+            )
+
+    def build(self):
+        self.exec_msbuild(r'build\win32\vs%(vs_ver)s\glib-openssl.sln')
+        self.install(r'.\COPYING share\doc\glib-openssl')
+        self.install(r'.\LICENSE_EXCEPTION share\doc\glib-openssl')
+
+Project.add(Project_glib_openssl())
+
 class Project_grpc(GitRepo, Project):
     def __init__(self):
         Project.__init__(self,
             'grpc',
             repo_url = 'https://github.com/grpc/grpc.git',
             fetch_submodules = True,
-            tag = 'release-0_14_1',
+            tag = 'v1.0.0',
             dependencies = ['protobuf'],
             patches = ['0001-Remove-RuntimeLibrary-setting-from-the-projects.patch'],
             )
@@ -581,15 +596,14 @@ class Project_gsettings_desktop_schemas(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'gsettings-desktop-schemas',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.20/gsettings-desktop-schemas-3.20.0.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.22/gsettings-desktop-schemas-3.22.0.tar.xz',
             dependencies = ['glib'],
             )
 
     def build(self):
         self.push_location(r'.\build\win32')
-        #Exec nmake /f gsettings-desktop-schemas-msvc.mak clean
-        self.exec_vs(r'nmake /nologo /f gsettings-desktop-schemas-msvc.mak CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PYTHON2="%(python_dir)s\python.exe" PERL="%(perl_dir)s\bin\perl.exe" PREFIX="%(gtk_dir)s"')
-        self.exec_vs(r'nmake /nologo /f gsettings-desktop-schemas-msvc.mak install CFG=%(configuration)s PREFIX="%(gtk_dir)s"')
+        self.exec_vs(r'nmake /nologo /f gsettings-desktop-schemas-msvc.mak CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PERL="%(perl_dir)s\bin\perl.exe" PREFIX="%(gtk_dir)s"')
+        self.exec_vs(r'nmake /nologo /f gsettings-desktop-schemas-msvc.mak install CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PREFIX="%(gtk_dir)s"')
         self.pop_location()
 
         self.install(r'.\COPYING share\doc\gsettings-desktop-schemas')
@@ -617,7 +631,7 @@ class Project_gtk(Project_gtk_base):
     def __init__(self):
         Project_gtk_base.__init__(self,
             'gtk', 
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/2.24/gtk+-2.24.30.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/2.24/gtk+-2.24.31.tar.xz',
             dependencies = ['atk', 'gdk-pixbuf', 'pango'],
             patches = ['gtk-revert-scrolldc-commit.patch', 'gtk-bgimg.patch', 'gtk-accel.patch', 'gtk-multimonitor.patch'],
             )
@@ -633,8 +647,9 @@ class Project_gtk3(Project_gtk_base):
     def __init__(self):
         Project_gtk_base.__init__(self,
             'gtk3',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/3.20/gtk+-3.20.9.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/3.22/gtk+-3.22.3.tar.xz',
             dependencies = ['atk', 'gdk-pixbuf', 'pango', 'libepoxy'],
+            patches = ['gtk3-clip-retry-if-opened-by-others.patch'],
             )
 
     def build(self):
@@ -668,7 +683,7 @@ class Project_harfbuzz(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'harfbuzz',
-            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.0.tar.bz2',
+            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.3.3.tar.bz2',
             dependencies = ['freetype', 'glib'],
             )
 
@@ -740,6 +755,25 @@ class Project_leveldb(Tarball, Project):
 
 Project.add(Project_leveldb())
 
+class Project_libarchive(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'libarchive',
+            archive_url = 'http://www.libarchive.org/downloads/libarchive-3.2.1.tar.gz',
+            dependencies = ['win-iconv', 'zlib', 'lz4', 'openssl', 'libxml2'],
+            patches = ['0001-test_write_format_gnutar_filenames-use-AE_IFLNK-inst.patch'],
+            )
+
+    def build(self):
+        cmake_config = 'Debug' if self.builder.opts.configuration == 'debug' else 'Release'
+        self.exec_vs(r'cmake . -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%(gtk_dir)s" -DCMAKE_BUILD_TYPE=' + cmake_config, add_path=self.builder.opts.cmake_path)
+        self.exec_vs(r'nmake /nologo', add_path=self.builder.opts.cmake_path)
+        self.exec_vs(r'nmake /nologo install', add_path=self.builder.opts.cmake_path)
+
+        self.install(r'.\COPYING share\doc\libarchive')
+
+Project.add(Project_libarchive())
+
 class Project_libcroco(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
@@ -788,11 +822,29 @@ class Project_libffi(Tarball, Project):
 
 Project.add(Project_libffi())
 
+class Project_libgxps(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'libgxps',
+            archive_url = 'https://git.gnome.org/browse/libgxps/snapshot/libgxps-4709da90210839ca8fdd424caa7be897f3be91bb.tar.xz',
+            dependencies = ['glib', 'libarchive', 'cairo', 'libpng'],
+            )
+
+    def build(self):
+        self.push_location(r'.\nmake')
+        self.exec_vs(r'nmake /nologo /f Makefile.vc CFG=%(configuration)s PREFIX="%(gtk_dir)s" LIBPNG=1 CAIRO_PDF=1 CAIRO_PS=1 CAIRO_SVG=1')
+        self.exec_vs(r'nmake /nologo /f Makefile.vc install CFG=%(configuration)s PREFIX="%(gtk_dir)s" LIBPNG=1 CAIRO_PDF=1 CAIRO_PS=1 CAIRO_SVG=1')
+        self.pop_location()
+
+        self.install(r'.\COPYING share\doc\libgxps')
+
+Project.add(Project_libgxps())
+
 class Project_libjpeg_turbo(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libjpeg-turbo',
-            archive_url = 'https://sourceforge.net/projects/libjpeg-turbo/files/1.5.0/libjpeg-turbo-1.5.0.tar.gz',
+            archive_url = 'https://sourceforge.net/projects/libjpeg-turbo/files/1.5.1/libjpeg-turbo-1.5.1.tar.gz',
             )
 
     def build(self):
@@ -848,7 +900,7 @@ class Project_libpng(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libpng',
-            archive_url = 'http://prdownloads.sourceforge.net/libpng/libpng-1.6.24.tar.xz',
+            archive_url = 'http://prdownloads.sourceforge.net/libpng/libpng-1.6.26.tar.xz',
             dependencies = ['zlib'],
             )
 
@@ -871,8 +923,10 @@ class Project_librsvg(Tarball, Project):
 
     def build(self):
         self.exec_msbuild(r'build\win32\vs%(vs_ver)s\librsvg.sln')
-        self.exec_cmd(r'%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache')
         self.install(r'.\COPYING share\doc\librsvg')
+
+    def post_install(self):
+        self.exec_cmd(r'%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache')
 
 Project.add(Project_librsvg())
 
@@ -915,9 +969,11 @@ class Project_libsoup(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libsoup',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libsoup/2.54/libsoup-2.54.1.tar.xz',
-            dependencies = ['libxml2', 'glib-networking', 'sqlite'],
-            patches = ['0001-Add-max-incoming-payload-size-property-to-the-websoc.patch']
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libsoup/2.56/libsoup-2.56.0.tar.xz',
+            dependencies = ['libxml2', 'glib-openssl', 'sqlite'],
+            patches = ['0001-websocket-connection-log-when-getting-a-pong-message.patch',
+                       '0001-websocket-add-api-to-add-a-keepalive-interval.patch',
+                       '0001-websocket-connection-avoid-sending-data-if-we-are-cl.patch']
             )
 
     def build(self):
@@ -1067,14 +1123,14 @@ class Project_lmdb(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'lmdb',
-            archive_url = 'https://github.com/wingtk/lmdb/archive/LMDB_MSVC_0.9.15.tar.gz',
+            archive_url = 'https://github.com/LMDB/lmdb/archive/LMDB_0.9.18.tar.gz',
             )
 
     def build(self):
-        self.exec_msbuild(r'libraries\liblmdb\lmdb.sln')
+        self.exec_msbuild(r'build\win32\vs%(vs_ver)s\lmdb.sln')
 
         self.install(r'.\libraries\liblmdb\lmdb.h include')
-        self.install(r'.\libraries\liblmdb\%(platform)s\%(configuration)s\lmdb.lib lib')
+        self.install(r'.\build\win32\vs%(vs_ver)s\%(platform)s\%(configuration)s\lmdb.lib lib')
         self.install(r'.\libraries\liblmdb\LICENSE share\doc\lmdb')
 
 Project.add(Project_lmdb())
@@ -1087,11 +1143,11 @@ class Project_lz4(Tarball, Project):
             )
 
     def build(self):
-        self.exec_msbuild(r'projects\vs12\lz4-dll.sln')
+        self.exec_msbuild(r'projects\vs%(vs_ver)s\lz4-dll.sln')
 
-        self.install(r'projects\vs12\bin\%(configuration)s\%(platform)s\lz4.dll projects\vs12\bin\%(configuration)s\%(platform)s\lz4.pdb bin')
+        self.install(r'projects\vs%(vs_ver)s\bin\%(configuration)s\%(platform)s\lz4.dll projects\vs%(vs_ver)s\bin\%(configuration)s\%(platform)s\lz4.pdb bin')
         self.install(r'.\lib\lz4.h .\lib\lz4hc.h include')
-        self.install(r'projects\vs12\bin\%(configuration)s\%(platform)s\lz4.lib lib')
+        self.install(r'projects\vs%(vs_ver)s\bin\%(configuration)s\%(platform)s\lz4.lib lib')
 
         self.install(r'.\lib\LICENSE share\doc\lz4')
 
@@ -1101,7 +1157,7 @@ class Project_openssl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'openssl',
-            archive_url = 'ftp://ftp.openssl.org/source/openssl-1.0.2h.tar.gz',
+            archive_url = 'ftp://ftp.openssl.org/source/openssl-1.0.2j.tar.gz',
             )
 
     def build(self):
@@ -1140,11 +1196,42 @@ class Project_openssl(Tarball, Project):
 
 Project.add(Project_openssl())
 
+class Project_opus(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'opus',
+            archive_url = 'http://downloads.xiph.org/releases/opus/opus-1.1.3.tar.gz',
+            )
+
+    def build(self):
+        version = '13'
+        if self.builder.opts.vs_ver == '14':
+            version = '15'
+
+        configuration = 'ReleaseDLL'
+        if self.builder.opts.configuration == 'debug':
+            configuration = 'DebugDLL'
+
+        self.exec_msbuild(r'.\win32\VS20' + version + '\opus.sln', configuration=configuration)
+
+        bin_dir = r'.\win32\VS20' + version + '\%s\%s' % (self.builder.opts.platform, configuration, )
+
+        self.install(bin_dir + r'\opus.dll bin')
+        self.install(bin_dir + r'\opus.pdb bin')
+
+        self.install(bin_dir + r'\opus.lib lib')
+
+        self.install(r'include\* include')
+
+        self.install(r'COPYING share\doc\opus')
+
+Project.add(Project_opus())
+
 class Project_pango(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'pango',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.40/pango-1.40.1.tar.xz',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.40/pango-1.40.3.tar.xz',
             dependencies = ['cairo', 'harfbuzz'],
             patches = ['read-pango-aliases-file.patch'],
             )
@@ -1187,11 +1274,35 @@ class Project_pixman(Tarball, Project):
 
 Project.add(Project_pixman())
 
+class Project_portaudio(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'portaudio',
+            archive_url = 'http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz',
+            patches = [ '0001-Do-not-add-suffice-to-the-library-name.patch',
+                        '0001-Fix-MSVC-check.patch' ]
+            )
+
+    def build(self):
+        cmake_config = 'Debug' if self.builder.opts.configuration == 'debug' else 'Release'
+        self.exec_vs(r'cmake . -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%(gtk_dir)s" -DPA_DLL_LINK_WITH_STATIC_RUNTIME=off -DCMAKE_BUILD_TYPE=' + cmake_config, add_path=self.builder.opts.cmake_path)
+        self.exec_vs(r'nmake /nologo', add_path=self.builder.opts.cmake_path)
+
+        self.install(r'portaudio.dll bin')
+        self.install(r'portaudio.pdb bin')
+        self.install(r'portaudio.lib lib')
+
+        self.install(r'.\include\* include')
+
+        self.install(r'.\LICENSE.txt share\doc\portaudio')
+
+Project.add(Project_portaudio())
+
 class Project_protobuf(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'protobuf',
-            archive_url = 'https://github.com/google/protobuf/archive/v3.0.0-beta-3.tar.gz',
+            archive_url = 'https://github.com/google/protobuf/archive/v3.1.0.tar.gz',
             )
 
     def build(self):
@@ -1249,7 +1360,7 @@ class Project_wing(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'wing',
-            archive_url = 'https://git.gnome.org/browse/wing/snapshot/wing-761363e12b0966d1e1bbd19e608fd409ca183f34.tar.xz',
+            archive_url = 'https://git.gnome.org/browse/wing/snapshot/wing-8c8ff6da28c4921f7306d7cc84ce0566a9f66e31.tar.xz',
             dependencies = ['glib'],
             )
 
@@ -1643,7 +1754,7 @@ def get_options(args):
     if not opts.nuget_path:
         opts.nuget_path = os.path.join(args.build_dir, 'nuget', 'nuget.exe')
     if not opts.patches_root_dir:
-        opts.patches_root_dir = os.path.join(args.build_dir, 'github', 'gtk-win32')
+        opts.patches_root_dir = sys.path[0]
     if not opts.vs_install_path:
         opts.vs_install_path = r'C:\Program Files (x86)\Microsoft Visual Studio %s.0' % (opts.vs_ver,)
 

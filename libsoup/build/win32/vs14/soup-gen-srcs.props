@@ -8,9 +8,9 @@
     <GenSoupVersionH>
 $(PythonPath)\python.exe ..\replace.py --action=replace-var --input=..\..\..\libsoup\soup-version.h.in --output=..\..\..\libsoup\soup-version.h.tmp1 --var=SOUP_MAJOR_VERSION --outstring=2
 
-$(PythonPath)\python.exe ..\replace.py --action=replace-var --input=..\..\..\libsoup\soup-version.h.tmp1 --output=..\..\..\libsoup\soup-version.h.tmp2 --var=SOUP_MINOR_VERSION --outstring=53
+$(PythonPath)\python.exe ..\replace.py --action=replace-var --input=..\..\..\libsoup\soup-version.h.tmp1 --output=..\..\..\libsoup\soup-version.h.tmp2 --var=SOUP_MINOR_VERSION --outstring=56
 
-$(PythonPath)\python.exe ..\replace.py --action=replace-var --input=..\..\..\libsoup\soup-version.h.tmp2 --output=..\..\..\libsoup\soup-version.h --var=SOUP_MICRO_VERSION --outstring=2
+$(PythonPath)\python.exe ..\replace.py --action=replace-var --input=..\..\..\libsoup\soup-version.h.tmp2 --output=..\..\..\libsoup\soup-version.h --var=SOUP_MICRO_VERSION --outstring=0
 
 del ..\..\..\libsoup\soup-version.h.tmp1 ..\..\..\libsoup\soup-version.h.tmp2
 
