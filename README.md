@@ -31,6 +31,17 @@ HexChat developers decided that their script should focus on their specific need
     pacman -S gzip nasm patch tar xz gettext make coreutils diffutils wget yasm pkg-config
     ```
 
+1. Set the path and environment variables in Windows
+
+    ```
+    C:\cmake\bin;
+    C:\gtk-build\nuget;
+    C:\msys64; ? 
+    C:\Python27;
+    C:\perl\bin;
+    ```
+
+
 1. Clone [this repository](https://github.com/hsccr/gtk-win32) to _C:\gtk-build\github\gtk-win32_ It contains the build script, project files and patches.
 
 1. Now start a command-line window as a regular user. Go to the _gtk-win32_ directory and start building with the script. For example, to build 32-bit GTK+ 3 and its dependencies, run:
