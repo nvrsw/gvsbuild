@@ -111,6 +111,7 @@ class Project_clutter(Tarball, Project):
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.0.tar.xz',
             hash = '67514e7824b3feb4723164084b36d6ce1ae41cb3a9897e9f1a56c8334993ce06',
             dependencies = ['atk','cogl','json-glib'],
+            patches = ['001-input-method-editor.patch'],
             )
 
     def build(self):
@@ -1157,6 +1158,7 @@ class Project_pango(Tarball, Project):
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.40/pango-1.40.5.tar.xz',
             hash = '24748140456c42360b07b2c77a1a2e1216d07c056632079557cd4e815b9d01c9',
             dependencies = ['cairo', 'harfbuzz'],
+            patches = ['read-pango-aliases-file.patch'],
             )
 
     def build(self):
