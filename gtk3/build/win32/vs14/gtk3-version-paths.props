@@ -5,15 +5,15 @@
     <GlibEtcInstallRoot>$(SolutionDir)\..\..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)</GlibEtcInstallRoot>
     <CopyDir>..\..\..\..\gtk3-rel</CopyDir>
     <ApiVersion>3.0</ApiVersion>
-    <GtkVersion>3.22.3</GtkVersion>
+    <GtkVersion>3.22.12</GtkVersion>
     <GtkLibtoolCompatibleDllPrefix>lib</GtkLibtoolCompatibleDllPrefix>
     <GtkLibtoolCompatibleDllSuffix>.0-0</GtkLibtoolCompatibleDllSuffix>
     <GtkSeparateVSDllPrefix />
     <GtkSeparateVSDllSuffix>-3.0</GtkSeparateVSDllSuffix>
     <GtkDllPrefix>$(GtkSeparateVSDllPrefix)</GtkDllPrefix>
     <GtkDllSuffix>$(GtkSeparateVSDllSuffix)</GtkDllSuffix>
-    <PythonPath>c:\python27</PythonPath>
-    <PythonPathX64>c:\python27</PythonPathX64>
+    <PythonPath>c:\python34</PythonPath>
+    <PythonPathX64>c:\python34</PythonPathX64>
   </PropertyGroup>
   <PropertyGroup>
     <_PropertySheetDisplayName>gtk3versionpathsprops</_PropertySheetDisplayName>
