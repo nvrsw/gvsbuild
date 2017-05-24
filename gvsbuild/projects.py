@@ -108,8 +108,8 @@ class Project_clutter(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'clutter',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.0.tar.xz',
-            hash = '67514e7824b3feb4723164084b36d6ce1ae41cb3a9897e9f1a56c8334993ce06',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.2.tar.xz',
+            hash = 'e7233314983055e9018f94f56882e29e7fc34d8d35de030789fdcd9b2d0e2e56',
             dependencies = ['atk','cogl','json-glib'],
             patches = ['001-input-method-editor.patch'],
             )
@@ -125,12 +125,11 @@ class Project_cogl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'cogl',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.0.tar.xz',
-            hash = '689dfb5d14fc1106e9d2ded0f7930dcf7265d0bc84fa846b4f03941633eeaa91',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.2.tar.xz',
+            hash = '39a718cdb64ea45225a7e94f88dddec1869ab37a21b339ad058a9d898782c00d',
             dependencies = ['glib','cairo','pango','gdk-pixbuf'],
             patches = ['001-cogl-missing-symbols.patch',
-                       '002-cogl-pango-missing-symbols.patch',
-                       '003-cogl-framebuffer-missing-debug-return.patch'],
+                       '002-cogl-pango-missing-symbols.patch'],
             )
 
     def build(self):
@@ -510,10 +509,12 @@ class Project_gtk_base(Tarball, Project):
 
         localedir = os.path.join(self.pkg_dir, 'share', 'locale')
         self.push_location(r'.\po')
-        for f in glob.glob('*.po'):
+        for fp in glob.glob(os.path.join(self.build_dir, 'po', '*.po')):
+            f = os.path.basename(fp)
             lcmsgdir = os.path.join(localedir, f[:-3], 'LC_MESSAGES')
             self.builder.make_dir(lcmsgdir)
-            self.builder.exec_msys(['msgfmt', '-co', os.path.join(lcmsgdir, mo), f], working_dir=self._get_working_dir())
+            cmd = ' '.join(['msgfmt', '-co', os.path.join(lcmsgdir, mo), f])
+            self.builder.exec_cmd(cmd, working_dir=self._get_working_dir())
         self.pop_location()
 
         self.install(r'.\COPYING share\doc\%s' % self.name)
@@ -641,8 +642,8 @@ class Project_leveldb(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'leveldb',
-            archive_url = 'http://github.com/google/leveldb/archive/v1.18.tar.gz',
-            hash = '4aa1a7479bc567b95a59ac6fb79eba49f61884d6fd400f20b7af147d54c5cee5',
+            archive_url = 'https://github.com/google/leveldb/archive/v1.20.tar.gz',
+            hash = 'f5abe8b5b209c2f36560b75f32ce61412f39a2922f7045ae764a2c23335b6664',
             )
 
     def build(self):
@@ -750,7 +751,7 @@ class Project_libjpeg_turbo(Tarball, Project):
             'libjpeg-turbo',
             archive_url = 'https://sourceforge.net/projects/libjpeg-turbo/files/1.5.1/libjpeg-turbo-1.5.1.tar.gz',
             hash = '41429d3d253017433f66e3d472b8c7d998491d2f41caa7306b8d9a6f2a2c666c',
-            dependencies = ['cmake'],
+            dependencies = ['cmake', 'nasm', ],
             )
 
     def build(self):
@@ -769,9 +770,9 @@ class Project_libmicrohttpd(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libmicrohttpd',
-             archive_url = 'http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.48.tar.gz',
-             hash = '87667e158f2bf8c691a002e256ffe30885d4121a9ee4143af0320c47cdf8a2a4',
-             patches = ['001-disable-w32_SetThreadName.patch'],
+             archive_url = 'http://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.54.tar.gz',
+             hash = 'bcc721895d4a114b0548a39d2241c35caacb9e2e072d40e11b55c60e3d5ddcbe',
+             patches = ['001-remove-postsample.patch'],
             )
 
     def build(self):
@@ -787,12 +788,12 @@ class Project_libmicrohttpd(Tarball, Project):
 
         debug_option = ''
         if self.builder.opts.configuration == 'debug':
-            debug_option = '_d'
+            debug_option = r'_d'
 
         if self.builder.x86:
-            rel_dir = r'w32\VS20' + version + '\Output'
+            rel_dir = r'.\w32\VS20' + version + r'\Output'
         else:
-            rel_dir = r'w32\VS20' + version + '\Output\x64'
+            rel_dir = r'.\w32\VS20' + version + r'\Output\x64'
 
         self.push_location(rel_dir)
         self.install(r'microhttpd.h include')
@@ -801,6 +802,8 @@ class Project_libmicrohttpd(Tarball, Project):
         self.install(r'libmicrohttpd-dll' + debug_option + '.pdb' + ' bin')
         self.install(r'hellobrowser-dll' + debug_option + '.exe' + ' bin')
         self.pop_location()
+
+
 
         self.install(r'.\COPYING share\doc\libmicrohttpd')
 
@@ -864,8 +867,8 @@ class Project_libcurl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libcurl',
-            archive_url = 'https://github.com/curl/curl/archive/curl-7_48_0.tar.gz',
-            hash = '401043087d326edc74021597b9b8a60d6b5c9245fe224beaf89fa6d6c2d9178a',
+            archive_url = 'https://github.com/curl/curl/releases/download/curl-7_54_0/curl-7.54.0.tar.gz',
+            hash = 'a84b635941c74e26cce69dd817489bec687eb1f230e7d1897fc5b5f108b59adf',
             dependencies = ['cmake'],
             )
 
@@ -899,8 +902,8 @@ class Project_libssh(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libssh',
-            archive_url = 'https://red.libssh.org/attachments/download/177/libssh-0.7.2.tar.xz',
-            hash = 'a32c45b9674141cab4bde84ded7d53e931076c6b0f10b8fd627f3584faebae62',
+            archive_url = 'https://red.libssh.org/attachments/download/218/libssh-0.7.5.tar.xz',
+            hash = '54e86dd5dc20e5367e58f3caab337ce37675f863f80df85b6b1614966a337095',
             dependencies = ['zlib','openssl'],
             )
 
@@ -915,8 +918,8 @@ class Project_libssh2(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libssh2',
-            archive_url = 'https://www.libssh2.org/download/libssh2-1.7.0.tar.gz',
-            hash = 'e4561fd43a50539a8c2ceb37841691baf03ecb7daf043766da1b112e4280d584',
+            archive_url = 'https://www.libssh2.org/download/libssh2-1.8.0.tar.gz',
+            hash = '39f34e2f6835f4b992cafe8625073a88e5a28ba78f83e8099610a7b3af4676d4',
             dependencies = ['cmake'],
             )
 
@@ -934,8 +937,8 @@ class Project_libuv(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libuv',
-            archive_url = 'https://github.com/libuv/libuv/archive/v1.9.1.tar.gz',
-            hash = 'a6ca9f0648973d1463f46b495ce546ddcbe7cce2f04b32e802a15539e46c57ad',
+            archive_url = 'https://github.com/libuv/libuv/archive/v1.11.0.tar.gz',
+            hash = '6ec7eec6ecc24b1a8ffedebedb2fe9313fffb5410de89aaf784dd01080411c7a',
             )
 
     def build(self):
@@ -947,7 +950,11 @@ class Project_libuv(Tarball, Project):
         if self.builder.x64:
             platform = r'x64'
 
+        tmp_python = os.getenv('PYTHON')
+        os.environ["PYTHON"] = 'c:\python27\python'
         os.system(r'%s\vcbuild.bat build static %s %s' % (self._get_working_dir(), self.builder.opts.configuration, platform))
+        if tmp_python != None:
+            os.environ["PYTHON"] = tmp_python
 
         self.install(r'include\pthread-barrier.h include\libuv')
         self.install(r'include\stdint-msvc2008.h include\libuv')
@@ -1023,8 +1030,8 @@ class Project_libzip(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libzip',
-            archive_url = 'http://nih.at/libzip/libzip-1.1.3.tar.gz',
-            hash = '1faa5a524dd4a12c43b6344e618edce1bf8050dfdb9d0f73f3cc826929a002b0',
+            archive_url = 'https://nih.at/libzip/libzip-1.2.0.tar.gz',
+            hash = '6cf9840e427db96ebf3936665430bab204c9ebbd0120c326459077ed9c907d9f',
             dependencies = ['cmake', 'zlib'],
             )
 
@@ -1080,7 +1087,7 @@ class Project_openssl(Tarball, Project):
             'openssl',
             archive_url = 'ftp://ftp.openssl.org/source/openssl-1.0.2k.tar.gz',
             hash = '6b3977c61f2aedf0f96367dcfb5c6e578cf37e7b8d913b4ecb6643c3cb88d8c0',
-            dependencies = ['perl'],
+            dependencies = ['perl', 'nasm', ],
             )
 
     def build(self):
@@ -1204,8 +1211,8 @@ class Project_pkg_config(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'pkg-config',
-            archive_url = 'https://pkg-config.freedesktop.org/releases/pkg-config-0.29.1.tar.gz',
-            hash = 'beb43c9e064555469bd4390dcfd8030b1536e0aa103f08d7abf7ae8cac0cb001',
+            archive_url = 'https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz',
+            hash = '6fc69c01688c9458a57eb9a1664c9aba372ccda420a02bf4429fe610e7e7d591',
             dependencies = [ 'glib', ],
             )
 
@@ -1249,8 +1256,8 @@ class Project_protobuf(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'protobuf',
-            archive_url = 'https://github.com/google/protobuf/archive/v3.2.1.tar.gz',
-            hash = '2eceab4cd58a73aadb7c84642838ee58c886e1f908acd45847a92b874d23c8ef',
+            archive_url = 'https://github.com/google/protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz',
+            hash = '5e2587dea2f9287885e3b04d3a94ed4e8b9b2d2c5dd1f0032ceef3ea1d153bd7',
             dependencies = ['cmake', 'zlib'],
             )
 
