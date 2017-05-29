@@ -219,13 +219,13 @@ public:
 
 void ToWidePath(const std::string& value, std::wstring& target) {
 	wchar_t buffer[MAX_PATH];
-	MultiByteToWideChar(CP_ACP, 0, value.c_str(), -1, buffer, MAX_PATH);
+	MultiByteToWideChar(CP_UTF8, 0, value.c_str(), -1, buffer, MAX_PATH);
 	target = buffer;
 }
 
 void ToNarrowPath(const std::wstring& value, std::string& target) {
 	char buffer[MAX_PATH];
-	WideCharToMultiByte(CP_ACP, 0, value.c_str(), -1, buffer, MAX_PATH, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, value.c_str(), -1, buffer, MAX_PATH, NULL, NULL);
 	target = buffer;
 }
 
@@ -908,17 +908,38 @@ uint64_t Win32Env::NowMicros()
     return (uint64_t)(GetTickCount64()*1000);
 }
 
+static bool CreateDirectoryRecursively( const std::wstring &directory) {
+  static const std::wstring separators(L"\\/");
+
+  // If the specified directory name doesn't exist, do our thing
+  DWORD fileAttributes = ::GetFileAttributesW(directory.c_str());
+  if(fileAttributes == INVALID_FILE_ATTRIBUTES) {
+
+    // Recursively do it all again for the parent directory, if any
+    std::size_t slashIndex = directory.find_last_of(separators);
+    if(slashIndex != std::wstring::npos)
+      if (!CreateDirectoryRecursively(directory.substr(0, slashIndex)))
+        return FALSE;
+
+    // Create the last directory on the path (the recursive calls will have taken
+    // care of the parent directories by now)
+    return ::CreateDirectoryW(directory.c_str(), nullptr);
+  }
+  else // Specified directory name already exists as a file or directory
+    return ((fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) ||
+           ((fileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0);
+
+  return FALSE;
+}
+
 Status Win32Env::CreateDir( const std::string& dirname )
 {
     Status sRet;
-    std::string path = dirname;
-    if(path[path.length() - 1] != '\\'){
-        path += '\\';
-    }
+    std::wstring path;
+    ToWidePath(dirname, path);
     ModifyPath(path);
-    if(!::MakeSureDirectoryPathExists( path.c_str() ) ){
-        sRet = Status::IOError(dirname, "Could not create directory.");
-    }
+    if(!CreateDirectoryRecursively( path.c_str()) )
+      sRet = Status::IOError(dirname, "Could not create directory.");
     return sRet;
 }
 
