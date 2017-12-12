@@ -67,8 +67,8 @@ class Project_cairo(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'cairo',
-            archive_url = 'http://cairographics.org/snapshots/cairo-1.15.2.tar.xz',
-            hash = '268cc265a7f807403582f440643064bf52896556766890c8df7bad02d230f6c9',
+            archive_url = 'http://cairographics.org/snapshots/cairo-1.15.10.tar.xz',
+            hash = '62ca226134cf2f1fd114bea06f8b374eb37f35d8e22487eaa54d5e9428958392',
             dependencies = ['fontconfig', 'glib', 'pixman', 'libpng'],
             )
 
