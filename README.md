@@ -28,8 +28,7 @@ HexChat developers decided that their script should focus on their specific need
 
     ```
     C:\cmake\bin;
-    C:\gtk-build\nuget;
-    C:\msys64;
+    C:\msys64\usr\bin;
     C:\Python34;
     C:\perl\bin;
     ```
@@ -54,14 +53,14 @@ HexChat developers decided that their script should focus on their specific need
 
     ```
     cd C:\gtk-build\github\gtk-win32
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release --vs-ver 14
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug --vs-ver 14
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release --vs-ver 14
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c debug --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c debug --vs-ver 14
     ```
     or
     ```
-    start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug
+    start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c debug && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c debug
     ```
 
     For more information about the possible commands. Run
