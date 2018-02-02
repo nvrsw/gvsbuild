@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{04D8CDBE-FB3E-4362-87E6-07DC3C0083B2}</ProjectGuid>
+    <RootNamespace>goocanvas2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <Import Project="goocanvas.props" />
+  <Import Project="..\..\..\..\stack.props" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>$(SolutionDir)$(Configuration)\$(PlatformName)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\src;$(PrjInstallRoot)\include\glib-2.0;$(PrjInstallRoot)\include\gtk-3.0;$(PrjInstallRoot)\include\pango-1.0;$(PrjInstallRoot)\include\cairo;$(PrjInstallRoot)\include\atk-1.0;$(PrjInstallRoot)\include\gdk-pixbuf-2.0;$(PrjInstallRoot)\lib\glib-2.0\include;$(PrjInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>$(PreBuildCfg)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>copy config.h from Windows template instead of calling configure</Message>
+    </PreBuildEvent>
+    <Lib>
+      <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>$(PrjDoInstall)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\src;$(PrjInstallRoot)\include\glib-2.0;$(PrjInstallRoot)\include\gtk-3.0;$(PrjInstallRoot)\include\pango-1.0;$(PrjInstallRoot)\include\cairo;$(PrjInstallRoot)\include\atk-1.0;$(PrjInstallRoot)\include\gdk-pixbuf-2.0;$(PrjInstallRoot)\lib\glib-2.0\include;$(PrjInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <OmitFramePointers>false</OmitFramePointers>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>$(PreBuildCfg)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>copy config.h from Windows template instead of calling configure</Message>
+    </PreBuildEvent>
+    <Lib>
+      <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>$(PrjDoInstall)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\src;$(PrjInstallRoot)\include\glib-2.0;$(PrjInstallRoot)\include\gtk-3.0;$(PrjInstallRoot)\include\pango-1.0;$(PrjInstallRoot)\include\cairo;$(PrjInstallRoot)\include\atk-1.0;$(PrjInstallRoot)\include\gdk-pixbuf-2.0;$(PrjInstallRoot)\lib\glib-2.0\include;$(PrjInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>$(PreBuildCfg)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>copy config.h from Windows template instead of calling configure</Message>
+    </PreBuildEvent>
+    <Lib>
+      <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>$(PrjDoInstall)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\src;$(PrjInstallRoot)\include\glib-2.0;$(PrjInstallRoot)\include\gtk-3.0;$(PrjInstallRoot)\include\pango-1.0;$(PrjInstallRoot)\include\cairo;$(PrjInstallRoot)\include\atk-1.0;$(PrjInstallRoot)\include\gdk-pixbuf-2.0;$(PrjInstallRoot)\lib\glib-2.0\include;$(PrjInstallRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).pdb</ProgramDataBaseFileName>
+      <OmitFramePointers>false</OmitFramePointers>
+    </ClCompile>
+    <PreBuildEvent>
+      <Command>$(PreBuildCfg)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>copy config.h from Windows template instead of calling configure</Message>
+    </PreBuildEvent>
+    <Lib>
+      <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>$(PrjDoInstall)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\config.h" />
+    <ClInclude Include="..\..\..\src\goocanvas.h" />
+    <ClInclude Include="..\..\..\src\goocanvasatk.h" />
+    <ClInclude Include="..\..\..\src\goocanvasellipse.h" />
+    <ClInclude Include="..\..\..\src\goocanvasenumtypes.h" />
+    <ClInclude Include="..\..\..\src\goocanvasgrid.h" />
+    <ClInclude Include="..\..\..\src\goocanvasgroup.h" />
+    <ClInclude Include="..\..\..\src\goocanvasimage.h" />
+    <ClInclude Include="..\..\..\src\goocanvasitem.h" />
+    <ClInclude Include="..\..\..\src\goocanvasitemmodel.h" />
+    <ClInclude Include="..\..\..\src\goocanvasitemsimple.h" />
+    <ClInclude Include="..\..\..\src\goocanvasmarshal.h" />
+    <ClInclude Include="..\..\..\src\goocanvaspath.h" />
+    <ClInclude Include="..\..\..\src\goocanvaspolyline.h" />
+    <ClInclude Include="..\..\..\src\goocanvasprivate.h" />
+    <ClInclude Include="..\..\..\src\goocanvasrect.h" />
+    <ClInclude Include="..\..\..\src\goocanvasstyle.h" />
+    <ClInclude Include="..\..\..\src\goocanvastable.h" />
+    <ClInclude Include="..\..\..\src\goocanvastext.h" />
+    <ClInclude Include="..\..\..\src\goocanvasutils.h" />
+    <ClInclude Include="..\..\..\src\goocanvaswidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\goocanvas.c" />
+    <ClCompile Include="..\..\..\src\goocanvasatk.c" />
+    <ClCompile Include="..\..\..\src\goocanvasellipse.c" />
+    <ClCompile Include="..\..\..\src\goocanvasenumtypes.c" />
+    <ClCompile Include="..\..\..\src\goocanvasgrid.c" />
+    <ClCompile Include="..\..\..\src\goocanvasgroup.c" />
+    <ClCompile Include="..\..\..\src\goocanvasimage.c" />
+    <ClCompile Include="..\..\..\src\goocanvasitem.c" />
+    <ClCompile Include="..\..\..\src\goocanvasitemmodel.c" />
+    <ClCompile Include="..\..\..\src\goocanvasitemsimple.c" />
+    <ClCompile Include="..\..\..\src\goocanvasmarshal.c" />
+    <ClCompile Include="..\..\..\src\goocanvaspath.c" />
+    <ClCompile Include="..\..\..\src\goocanvaspolyline.c" />
+    <ClCompile Include="..\..\..\src\goocanvasrect.c" />
+    <ClCompile Include="..\..\..\src\goocanvasstyle.c" />
+    <ClCompile Include="..\..\..\src\goocanvastable.c" />
+    <ClCompile Include="..\..\..\src\goocanvastext.c" />
+    <ClCompile Include="..\..\..\src\goocanvasutils.c" />
+    <ClCompile Include="..\..\..\src\goocanvaswidget.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

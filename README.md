@@ -11,24 +11,26 @@ HexChat developers decided that their script should focus on their specific need
 1. We try to follow as much as possible the conventions of the upstream MSVC projects by Fan Chun-wei - [Compiling the GTK+ (and Clutter) stack using Visual C++ 2008 and later](https://wiki.gnome.org/action/show/Projects/GTK+/Win32/MSVCCompilationOfGTKStack).
 1. We are pretty liberal about adding more libraries to the script - at some point we will need to make the set of libraries that are built configurable and easily extensible, but right now we are ok with adding libraries that are useful to the users of this script
 1. We try to fetch tarballs from their original locations - if patches are needed we try to fork the project on github and host a patched tarball there
+1. We try to download the tools needed and using them from a local directory, without any installation. Actually we use directly, among others, cmake, meson, ninja, nuget and perl.
 
 ## Building
 
 1. Install the following build tools and dependencies:
 
-    * [Visual Studio 2013 Express for Windows Desktop](http://www.visualstudio.com/downloads/download-visual-studio-vs#d-2013-express) - Any version of VS apart from 2013 is not supported.
-    * [CMake 3.5.2](http://www.cmake.org/download/)
+    * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013 and 2015 are currently supported.
     * [msys2](https://msys2.github.io/)
-    * Perl 5.20 [x86](https://dl.hexchat.net/misc/perl/perl-5.20.0-x86.7z) or [x64](https://dl.hexchat.net/misc/perl/perl-5.20.0-x64.7z) (extract to _C:\perl_)
-    * [Python 2.7](https://www.python.org/ftp/python/2.7.9/python-2.7.9.amd64.msi) (install in C:\Python27), or other package like [Miniconda 2.7](https://repo.continuum.io/miniconda/Miniconda2-latest-Windows-x86_64.exe)
-    * [nuget](https://dist.nuget.org/win-x86-commandline/latest/nuget.exe) (install in C:\gtk-build\nuget)
+    * [Python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) (install in C:\Python34), or other package like [Miniconda 3.4](https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe)
+    * [Python 2.7.9](https://www.python.org/ftp/python/2.7.9/python-2.7.9.amd64.msi) (install in C:\Python27) - build only for `libuv`
 
-1. Follow the instructions on the msys2 page to update the core packages.
+1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
-1. Install needed packages in the msys2 shell
+1. Set the path and environment variables in Windows
 
-    ```bash
-    pacman -S gzip nasm patch tar xz gettext make coreutils diffutils wget yasm pkg-config
+    ```
+    C:\cmake\bin;
+    C:\msys64\usr\bin;
+    C:\Python34;
+    C:\perl\bin;
     ```
 
 1. Clone [this repository](https://github.com/hsccr/gtk-win32) to _C:\gtk-build\github\gtk-win32_ It contains the build script, project files and patches.
@@ -51,14 +53,14 @@ HexChat developers decided that their script should focus on their specific need
 
     ```
     cd C:\gtk-build\github\gtk-win32
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c debug --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c debug --vs-ver 14
     ```
     or
     ```
-    start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c debug && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c debug
+    start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x64 -c debug && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c release && start python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb gtk goocanvas -p x86 -c debug
     ```
 
     For more information about the possible commands. Run
