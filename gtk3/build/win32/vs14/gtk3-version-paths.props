@@ -12,8 +12,8 @@
     <GtkSeparateVSDllSuffix>-3.0</GtkSeparateVSDllSuffix>
     <GtkDllPrefix>$(GtkSeparateVSDllPrefix)</GtkDllPrefix>
     <GtkDllSuffix>$(GtkSeparateVSDllSuffix)</GtkDllSuffix>
-    <PythonPath>c:\python34</PythonPath>
-    <PythonPathX64>c:\python34</PythonPathX64>
+    <PythonDir>C:\Python34</PythonDir>
+    <PythonDirX64>C:\Python34</PythonDirX64>
   </PropertyGroup>
   <PropertyGroup>
     <_PropertySheetDisplayName>gtk3versionpathsprops</_PropertySheetDisplayName>
@@ -52,11 +52,11 @@
     <BuildMacro Include="GtkDllSuffix">
       <Value>$(GtkDllSuffix)</Value>
     </BuildMacro>
-    <BuildMacro Include="PythonPath">
-      <Value>$(PythonPath)</Value>
+    <BuildMacro Include="PythonDir">
+      <Value>$(PythonDir)</Value>
     </BuildMacro>
-    <BuildMacro Include="PythonPathX64">
-      <Value>$(PythonPathX64)</Value>
+    <BuildMacro Include="PythonDirX64">
+      <Value>$(PythonDirX64)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
