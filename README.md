@@ -27,10 +27,8 @@ HexChat developers decided that their script should focus on their specific need
 1. Set the path and environment variables in Windows
 
     ```
-    C:\cmake\bin;
     C:\msys64\usr\bin;
     C:\Python34;
-    C:\perl\bin;
     ```
 
 1. Clone [this repository](https://github.com/hsccr/gtk-win32) to _C:\gtk-build\github\gtk-win32_ It contains the build script, project files and patches.
@@ -67,6 +65,20 @@ HexChat developers decided that their script should focus on their specific need
 
     ```
     python .\build.py --help
+    ```
+
+    To build VMS, run:
+
+    ```
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release --vs-ver 14
+    ```
+
+    To build CMS, run:
+
+    ```
+    python build.py build gtk3 libssh libuv librsvg goocanvas -p x64 -c release --vs-ver 14
+    python build.py build gtk3 libssh libuv librsvg goocanvas -p x86 -c release --vs-ver 14
     ```
 
 1. When the script is done, your GTK+ stack will be found under _C:\gtk-build\gtk_. Enjoy!

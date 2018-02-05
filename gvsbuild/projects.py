@@ -556,7 +556,7 @@ class Project_gtk3(Project_gtk_base):
             'gtk3',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/3.22/gtk+-3.22.26.tar.xz',
             hash = '61eef0d320e541976e2dfe445729f12b5ade53050ee9de6184235cb60cd4b967',
-            #dependencies = ['atk', 'gdk-pixbuf', 'pango', 'libepoxy'],
+            dependencies = ['atk', 'gdk-pixbuf', 'pango', 'libepoxy'],
             patches = ['gtk3-clip-retry-if-opened-by-others.patch'],
             )
 
