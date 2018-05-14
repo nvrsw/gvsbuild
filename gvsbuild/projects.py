@@ -964,9 +964,15 @@ class Project_libuv(Tarball, Project):
         if self.builder.x64:
             platform = r'x64'
 
+        vs_ver = r'vs2013'
+        if self.builder.opts.vs_ver == '14':
+            vs_ver = r'vs2015'
+        if self.builder.opts.vs_ver == '15':
+            vs_ver = r'vs2017'
+
         tmp_python = os.getenv('PYTHON')
         os.environ["PYTHON"] = 'c:\python27\python.exe'
-        os.system(r'%s\vcbuild.bat build static %s %s' % (self._get_working_dir(), self.builder.opts.configuration, platform))
+        os.system(r'%s\vcbuild.bat build static %s %s %s' % (self._get_working_dir(), self.builder.opts.configuration, platform, vs_ver))
         if tmp_python != None:
             os.environ["PYTHON"] = tmp_python
 
