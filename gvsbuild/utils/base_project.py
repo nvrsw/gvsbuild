@@ -25,6 +25,7 @@ import shutil
 from .utils import _rmtree_error_handler
 from .simple_ui import print_debug, print_log, error_exit
 
+GVSBUILD_IGNORE = 0
 GVSBUILD_PROJECT = 1
 GVSBUILD_TOOL = 2
 GVSBUILD_GROUP = 3
@@ -36,6 +37,7 @@ class Project(object):
         self.dependencies = []
         self.patches = []
         self.archive_url = None
+        self.archive_file_name = None
         self.tarbomb = False
         self.type = GVSBUILD_PROJECT
         for k in kwargs:
@@ -155,3 +157,23 @@ class Project(object):
     @staticmethod
     def get_dict():
         return dict(Project._dict)
+
+    @staticmethod
+    def get_tool_path(tool_name):
+        p = Project._dict[tool_name]
+        if p.type == GVSBUILD_TOOL:
+            t = p.get_path()
+            if isinstance(t, tuple):
+                # Get the one that's not null
+                return t[0] if t[0] else t[1]
+            else:
+                return t
+        else:
+            return None
+
+def project_add(cls):
+    """
+    Class decorator to add the newly created Project class to the global projects/tools/groups list
+    """
+    Project.add(cls())
+    return cls

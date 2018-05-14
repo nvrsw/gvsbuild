@@ -25,15 +25,27 @@ import subprocess
 import traceback
 import glob
 import hashlib
-import urllib.request
+from urllib.request import splittype, urlopen, ContentTooShortError
+from urllib.error import URLError
+import contextlib
+import ssl
+import zipfile
+import re
+import copy
 
 from .utils import ordered_set
+from .utils import rmtree_full
+from .simple_ui import script_title
 from .simple_ui import global_verbose, error_exit, print_debug, print_log, print_message
 from .base_project import Project
+from .base_expanders import dirlist2set
+from .base_expanders import make_zip
 
 class Builder(object):
     def __init__(self, opts):
         self.opts = opts
+
+        script_title('* Setup')
 
         # Check and normalize the platform
         if opts.platform in ('Win32', 'win32', 'x86'):
@@ -49,13 +61,25 @@ class Builder(object):
         self.working_dir = os.path.join(opts.build_dir, 'build', opts.platform, opts.configuration)
         self.gtk_dir = os.path.join(opts.build_dir, 'gtk', opts.platform, opts.configuration)
 
+        if opts.from_scratch:
+            print('Removing working/building dir (%s)' % (self.working_dir, ))
+            rmtree_full(self.working_dir, retry=True)
+            print('Removing destination dir (%s)' % (self.gtk_dir, ))
+            rmtree_full(self.gtk_dir, retry=True)
+            if not opts.keep_tools:
+                print('Removing tools dir (%s)' % (opts.tools_root_dir, ))
+                rmtree_full(opts.tools_root_dir, retry=True)
+
+        if not opts.use_env:
+            self.__minimum_env()
+
         self.__check_tools(opts)
         self.__check_vs(opts)
 
         self.x86 = opts.platform == 'Win32'
         self.x64 = not self.x86
 
-        self.msbuild_opts = '/nologo /p:Platform=%(platform)s /p:PythonPath=%(python_dir)s %(msbuild_opts)s ' % \
+        self.msbuild_opts = '/nologo /p:Platform=%(platform)s /p:PythonPath="%(python_dir)s" /p:PythonDir="%(python_dir)s" %(msbuild_opts)s ' % \
             dict(platform=opts.platform, python_dir=opts.python_dir, configuration=opts.configuration, msbuild_opts=opts.msbuild_opts)
 
         if global_verbose:
@@ -63,12 +87,94 @@ class Builder(object):
         else:
             self.msbuild_opts += ' /v:minimal'
 
+        # Create the year version for Visual studio
+        vs_zip_parts = {
+            '12': 'vs2013',
+            '14': 'vs2015',
+            '15': 'vs2017',
+        }
+
+        self.vs_ver_year = vs_zip_parts.get(opts.vs_ver, None)
+        if not self.vs_ver_year:
+            self.vs_ver_year = 'ms-cl-%s' % (opts.vs_ver, )
+
+        vs_part = self.vs_ver_year
+        if opts.win_sdk_ver:
+            vs_part += '-' + opts.win_sdk_ver
+            self.msbuild_opts += ' /p:WindowsTargetPlatformVersion="%s"' % (opts.win_sdk_ver, )
+
+        self.zip_dir = os.path.join(opts.build_dir, 'dist', vs_part, opts.platform, opts.configuration)
+        if opts.make_zip:
+            if opts.zip_continue:
+                self.file_built = self._load_built_files()
+            else:
+                # Remove the destination dir before starting anything
+                if os.path.isdir(self.gtk_dir):
+                    print_log('Removing build dir (%s)' % (self.gtk_dir, ))
+                    rmtree_full(self.gtk_dir)
+                self.file_built = set()
+            os.makedirs(self.zip_dir, exist_ok=True)
+
+    def __minimum_env(self):
+        """
+        Set the environment to the minimum needed to run, leaving only
+        the c:\windows\XXXX directory and the git one.
+
+        The LIB, LIBPATH & INCLUDE environment are also cleaned to avoid
+        mismatch with  libs / programs already installed
+        """
+
+        print_debug('Cleaning up the build environment')
+        win_dir = os.environ.get('SYSTEMROOT', r'c:\windows').lower()
+
+        win_dir = win_dir.replace('\\', '\\\\')
+        print_debug('windir -> %s' % (win_dir, ))
+
+        chk_re = [
+            re.compile('^%s\\\\' % (win_dir, )),
+            re.compile('^%s$' % (win_dir, )),
+            re.compile('\\\\git\\\\'),
+            re.compile('\\\\git$'),
+        ]
+
+        mp = []
+        paths = os.environ.get('PATH', '').split(';')
+        for k in paths:
+            # use all lower
+            k = os.path.normpath(k).lower()
+            if k in mp:
+                # already present
+                print_debug("   Already present: '%s'" % (k, ))
+                continue
+
+            add = False
+            for cre in chk_re:
+                if cre.search(k):
+                    mp.append(k)
+                    add = True
+                    break
+            if add:
+                print_debug("Add '%s'" % (k, ))
+            else:
+                print_debug("   Skip '%s'" % (k, ))
+
+        print_debug('Final path:')
+        for i in mp:
+            print_debug('    %s' % (i, ))
+        os.environ['PATH'] = ';'.join(mp)
+
+        os.environ['LIB'] = ''
+        os.environ['LIBPATH'] = ''
+        os.environ['INCLUDE'] = ''
+        print_debug('End environment setup')
+
     def __msys_missing(self, base_dir):
         msys_pkg = [
             ('patch',      'patch'),
             ('make',       'make'),
             ('md5sum',     'coreutils'),
             ('diff',       'diffutils'),
+            ('bison',       'bison'),
         ]
         missing = []
         for prog, pkg in msys_pkg:
@@ -78,6 +184,7 @@ class Builder(object):
         return missing
 
     def __check_tools(self, opts):
+        script_title('* Msys tool')
         # what's missing ?
         missing = self.__msys_missing(opts.msys_dir)
         if missing:
@@ -96,41 +203,78 @@ class Builder(object):
             error_exit("%s not found. Please check that you installed patch in msys2 using ``pacman -S patch``" % (self.patch,))
         print_debug("patch: %s" % (self.patch,))
 
-    def add_env(self, key, value, prepend=True):
-        env = os.environ
-        te = env.get(key, None)
+    def _add_env(self, key, value, env, prepend=True, subst=False):
+        # env manipulation helper fun
+        # returns a tuple with the old (key, value, ) to let the script restore it if needed
+        org_env = env.get(key, None)
+        if subst:
+            te = None
+        else:
+            te = org_env
         if te:
             if prepend:
                 env[key] = value + ';' + te
             else:
                 env[key] = te + ';' + value
         else:
-            # not set
+            # not set or forced
             env[key] = value
+        return (key, org_env, )
 
+    def add_global_env(self, key, value, prepend=True):
+        # Env to load before the setup for the visual studio environment
+        self._add_env(key, value, os.environ, prepend)
+
+    def mod_env(self, key, value, prepend=True, subst=False):
+        # Modify the current build environment
+        # returns the old value
+        return self._add_env(key, value, self.vs_env, prepend=prepend, subst=subst)
+
+    def restore_env(self, saved):
+        if saved:
+            key, value = saved
+            if key:
+                if value:
+                    self.vs_env[key] = value
+                else:
+                    del self.vs_env[key]
+            
     def __check_vs(self, opts):
+        script_title('* Msvc tool')
         # Verify VS exists at the indicated location, and that it supports the required target
+        add_opts = ''
         if opts.platform == 'Win32':
             vcvars_bat = os.path.join(opts.vs_install_path, 'VC', 'bin', 'vcvars32.bat')
+            # make sure it works with VS 2017
+            if not os.path.exists(vcvars_bat):
+                vcvars_bat=os.path.join(opts.vs_install_path, 'VC', 'Auxiliary', 'Build', 'vcvars32.bat')
+            if opts.win_sdk_ver:
+                add_opts = ' %s' % (opts.win_sdk_ver, )
         else:
             vcvars_bat = os.path.join(opts.vs_install_path, 'VC', 'bin', 'amd64', 'vcvars64.bat')
-            # make sure it works even with VS Express
+            # make sure it works with VS Express
             if not os.path.exists(vcvars_bat):
                 vcvars_bat = os.path.join(opts.vs_install_path, 'VC', 'bin', 'x86_amd64', 'vcvarsx86_amd64.bat')
+            # make sure it works with VS 2017
+            if not os.path.exists(vcvars_bat):
+                vcvars_bat=os.path.join(opts.vs_install_path, 'VC', 'Auxiliary', 'Build', 'vcvars64.bat')
+            if opts.win_sdk_ver:
+                add_opts = ' %s' % (opts.win_sdk_ver, )
 
         if not os.path.exists(vcvars_bat):
             raise Exception("'%s' could not be found. Please check you have Visual Studio installed at '%s' and that it supports the target platform '%s'." % (vcvars_bat, opts.vs_install_path, opts.platform))
 
         # Add to the environment the gtk paths so meson can find everything
-        self.add_env('INCLUDE', os.path.join(self.gtk_dir, 'include'))
-        self.add_env('LIB', os.path.join(self.gtk_dir, 'lib'))
-        self.add_env('LIBPATH', os.path.join(self.gtk_dir, 'lib'))
-        self.add_env('PATH', os.path.join(self.gtk_dir, 'bin'))
+        self.add_global_env('INCLUDE', os.path.join(self.gtk_dir, 'include'))
+        self.add_global_env('LIB', os.path.join(self.gtk_dir, 'lib'))
+        self.add_global_env('LIBPATH', os.path.join(self.gtk_dir, 'lib'))
+        self.add_global_env('PATH', os.path.join(self.gtk_dir, 'bin'))
 
-        output = subprocess.check_output('cmd.exe /c ""%s" && set"' % (vcvars_bat,), shell=True)
+        output = subprocess.check_output('cmd.exe /c ""%s"%s>NUL && set"' % (vcvars_bat, add_opts, ), shell=True)
         self.vs_env = {}
         for l in output.splitlines():
-            k, v = l.decode('utf-8').split("=", 1)
+            # python 3 str is not bytes and no need to decode
+            k, v = (l.decode('utf-8') if isinstance(l, bytes) else l).split("=", 1)
             # Be sure to have PATH in upper case because we need to manipulate it
             if k.upper() == 'PATH':
                 k = 'PATH'
@@ -140,8 +284,11 @@ class Builder(object):
     def preprocess(self):
         for proj in Project.list_projects():
             if proj.archive_url:
-                url = proj.archive_url
-                archive = url[url.rfind('/') + 1:]
+                if proj.archive_file_name:
+                    archive = proj.archive_file_name
+                else:
+                    url = proj.archive_url
+                    archive = url[url.rfind('/') + 1:]
                 proj.archive_file = os.path.join(self.opts.archives_download_dir, archive)
             else:
                 proj.archive_file = None
@@ -179,6 +326,7 @@ class Builder(object):
             except:
                 traceback.print_exc()
                 error_exit("%s build failed" % (p.name))
+        script_title(None)
 
     def __prepare_build(self, projects):
         if not os.path.exists(self.working_dir):
@@ -199,14 +347,29 @@ class Builder(object):
             print_log("Creating directory %s" % (build_dir,))
             os.makedirs(build_dir)
 
+        script_title('* Downloading')
         for p in projects:
             if self.__download_one(p):
                 return True
         return False
 
-    def __build_one(self, proj):
-        print_message("Building project %s" % (proj.name,))
+    def _load_built_files(self):
+        """
+        Return a set with all the files present in the final, installation, dir
+        """
+        return dirlist2set(self.gtk_dir)
 
+    def __build_one(self, proj):
+        if self.opts.fast_build and not self.opts.clean:
+            if os.path.isdir(proj.build_dir):
+                print_message("Fast build:skipping project %s" % (proj.name, ))
+                return 
+            
+        print_message("Building project %s" % (proj.name,))
+        script_title(proj.name)
+
+        # save the vs environment
+        saved_env = copy.copy(self.vs_env)
         proj.builder = self
         self.__project = proj
 
@@ -217,18 +380,25 @@ class Builder(object):
         os.makedirs(proj.pkg_dir)
 
         # Get the paths to add
-        paths = []
+        paths = self.vs_env['PATH'].split(';')
+        # Add the paths needed
         for d in proj.all_dependencies:
             t = d.get_path()
             if t:
-                paths.append(t)
+                if isinstance(t, tuple):
+                    # pre/post
+                    if t[0]:
+                        # Add at the beginning,
+                        paths.insert(0, t[0])
+                    if t[1]:
+                        # Add at the end (msys, )
+                        paths.append(t[1])
+                else:
+                    # Single path,  at the beginning
+                    paths.insert(0, t)
 
-        # Save base vs path
-        vs_saved_path = self.vs_env['PATH']
-        if paths:
-            # Something to add to the vs environment path, at the beginning
-            tp = ';'.join(paths)
-            self.vs_env['PATH'] = tp + ';' + vs_saved_path
+        # Make the (eventually) new path
+        self.vs_env['PATH'] = ';'.join(paths)
 
         proj.patch()
         proj.build()
@@ -241,9 +411,28 @@ class Builder(object):
 
         proj.builder = None
         self.__project = None
-        if vs_saved_path:
-            # Restore the original vs path
-            self.vs_env['PATH'] = vs_saved_path
+        # Restore the full environment
+        self.vs_env = saved_env
+        saved_env = None
+
+        if self.opts.make_zip:
+            # Create file list
+            cur = self._load_built_files()
+            # delta with the old
+            new = cur - self.file_built
+            if new:
+                # file presents, do the zip
+                zip_file = os.path.join(self.zip_dir, proj.name + '.zip')
+                self.make_zip(zip_file, new)
+                # use the current file set
+                self.file_built = cur
+            else:
+                # No file preentt
+                print_log("%s:zip not needed (tool?)" % (proj.name, ))
+        script_title(None)
+
+    def make_zip(self, name, files):
+        make_zip(name, files, skip_spc=len(self.gtk_dir))
 
     def make_dir(self, path):
         if not os.path.exists(path):
@@ -318,6 +507,64 @@ class Builder(object):
             if len(sp) > self._old_print:
                 self._old_print = len(sp)
 
+    def urlretrieve(self, url, filename, reporthook, ssl_ignore_cert=False):
+        """
+        Retrieve a URL into a temporary location on disk.
+
+        Requires a URL argument. If a filename is passed, it is used as
+        the temporary file location. The reporthook argument should be
+        a callable that accepts a block number, a read size, and the
+        total file size of the URL target. The data argument should be
+        valid URL encoded data.
+
+        If a filename is passed and the URL points to a local resource,
+        the result is a copy from local file to new file.
+
+        Returns a tuple containing the path to the newly created
+        data file as well as the resulting HTTPMessage object.
+        """
+        url_type, path = splittype(url)
+
+        if ssl_ignore_cert:
+            # ignore certificate
+            ssl_ctx = ssl._create_unverified_context()
+        else:
+            # let the library does the work
+            ssl_ctx = None
+
+        msg = 'Opening %s ...' % (url, )
+        print(msg, end='\r')
+        with contextlib.closing(urlopen(url, None, context=ssl_ctx)) as fp:
+            print('%*s' % (len(msg), '', ), end = '\r')
+            headers = fp.info()
+
+            with open(filename, 'wb') as tfp:
+                result = filename, headers
+                bs = 1024*8
+                size = -1
+                read = 0
+                blocknum = 0
+                if "content-length" in headers:
+                    size = int(headers["Content-Length"])
+
+                reporthook(blocknum, bs, size)
+
+                while True:
+                    block = fp.read(bs)
+                    if not block:
+                        break
+                    read += len(block)
+                    tfp.write(block)
+                    blocknum += 1
+                    reporthook(blocknum, bs, size)
+
+        if size >= 0 and read < size:
+            raise ContentTooShortError(
+                "retrieval incomplete: got only %i out of %i bytes"
+                % (read, size), result)
+
+        return result
+
     def __download_one(self, proj):
         if not proj.archive_file:
             print_debug("archive file is not specified for project %s, skipping" % (proj.name,))
@@ -336,7 +583,19 @@ class Builder(object):
         self._downloading_file = proj.archive_file
         self._old_perc = -1
         self._old_print = 0
-        urllib.request.urlretrieve(proj.archive_url, proj.archive_file, reporthook=self.__download_progress)
+        try:
+            self.urlretrieve(proj.archive_url, proj.archive_file, self.__download_progress)
+        except (ssl.SSLError, URLError) as e:
+            print("Exception downloading file '%s'" % (proj.archive_url, ))
+            print(e)
+            if hasattr(proj, 'hash'):
+                self._old_perc = -1
+                self._old_print = 0
+                self.urlretrieve(proj.archive_url, proj.archive_file, self.__download_progress, ssl_ignore_cert=True)
+            else:
+                print('Hash not present, bailing out ;(')
+                raise
+
         print('%-*s' % (self._old_print, '%s - Download finished' % (proj.archive_file, )), )
         return self.__check_hash(proj)
 
@@ -392,4 +651,9 @@ class Builder(object):
             if k.lower() == 'path':
                 key = k
                 break
-        env[key] = env[key] + ';' + folder
+        if key:
+            env[key] = env[key] + ';' + folder
+        else:
+            key = 'path'
+            env[key] = folder
+        print_debug("Changed path env variable to '%s'" % env[key])
