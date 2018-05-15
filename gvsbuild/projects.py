@@ -797,6 +797,8 @@ class Project_libmicrohttpd(Tarball, Project):
         version = '13'
         if self.builder.opts.vs_ver == '14':
             version = '15'
+        if self.builder.opts.vs_ver == '15':
+            version = '17'
 
         self.exec_msbuild(r'w32\VS20' + version + '\libmicrohttpd.sln', configuration=configuration)
 
