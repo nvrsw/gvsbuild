@@ -1003,6 +1003,27 @@ class Project_libuv(Tarball, Project):
 
 Project.add(Project_libuv())
 
+class Project_libwebsockets(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'libwebsockets',
+            archive_url = 'https://github.com/warmcat/libwebsockets/archive/v3.0.0.tar.gz',
+            hash = 'a6b611c212c52f161f70556339fdaa199b7e9b6a167c4638e086d19db75d6290',
+            dependencies = ['cmake', 'openssl'],
+            )
+
+    def build(self):
+        self.exec_vs(r'cmake . -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%(gtk_dir)s" -DCMAKE_BUILD_TYPE=%(configuration)s')
+        self.exec_vs(r'nmake /nologo')
+
+        self.install(r'.\bin\* bin')
+        self.install(r'.\lib\*.lib lib')
+        self.install(r'.\include\* include')
+
+        self.install(r'.\LICENSE share\doc\libwebsockets')
+
+Project.add(Project_libwebsockets())
+
 class Project_libxml2(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
