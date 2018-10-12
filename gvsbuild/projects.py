@@ -1128,13 +1128,13 @@ class Project_openssl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'openssl',
-            archive_url = 'ftp://ftp.openssl.org/source/openssl-1.0.2n.tar.gz',
-            hash = '370babb75f278c39e0c50e8c4e7493bc0f18db6867478341a832a982fd15a8fe',
+            archive_url = 'ftp://ftp.openssl.org/source/openssl-1.1.1.tar.gz',
+            hash = '2836875a0f89c03d0fdf483941512613a50cfb421d6fd94b9f41d7279d586a3d',
             dependencies = ['perl', 'nasm', ],
             )
 
     def build(self):
-        common_options = r'no-ssl2 no-ssl3 no-comp --prefix="%(pkg_dir)s"'
+        common_options = r'no-ssl3 no-comp --prefix="%(pkg_dir)s" --openssldir="%(pkg_dir)s"'
         add_path = None
 
         debug_option = ''
@@ -1148,20 +1148,12 @@ class Project_openssl(Tarball, Project):
 
         if self.builder.x86:
             self.exec_vs(r'%(perl_dir)s\bin\perl.exe Configure ' + debug_option + 'VC-WIN32 ' + common_options)
-            self.exec_vs(r'ms\do_nasm', add_path=add_path)
         else:
             self.exec_vs(r'%(perl_dir)s\bin\perl.exe Configure ' + debug_option + 'VC-WIN64A ' + common_options)
-            self.exec_vs(r'ms\do_win64a', add_path=add_path)
 
-        try:
-            self.exec_vs(r'nmake /nologo -f ms\ntdll.mak vclean', add_path=add_path)
-        except:
-            pass
-
-        self.exec_vs(r'nmake /nologo -f ms\ntdll.mak', add_path=add_path)
-        self.exec_vs(r'nmake /nologo -f ms\ntdll.mak test', add_path=add_path)
+        self.exec_vs(r'nmake /nologo', add_path=add_path)
         self.exec_vs(r'%(perl_dir)s\bin\perl.exe mk-ca-bundle.pl -n cert.pem')
-        self.exec_vs(r'nmake /nologo -f ms\ntdll.mak install', add_path=add_path)
+        self.exec_vs(r'nmake /nologo install', add_path=add_path)
 
         self.install(r'.\cert.pem bin')
         self.install(r'.\openssl.cnf share')
