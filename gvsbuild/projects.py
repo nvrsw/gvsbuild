@@ -918,8 +918,8 @@ class Project_libssh(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libssh',
-            archive_url = 'https://red.libssh.org/attachments/download/218/libssh-0.7.5.tar.xz',
-            hash = '54e86dd5dc20e5367e58f3caab337ce37675f863f80df85b6b1614966a337095',
+            archive_url = 'https://www.libssh.org/files/0.8/libssh-0.8.3.tar.xz',
+            hash = '302f31f606f2368cd3ce77d7a69f7464c18eae176e73e59102e0524401bd29d0',
             dependencies = ['zlib','openssl'],
             )
 

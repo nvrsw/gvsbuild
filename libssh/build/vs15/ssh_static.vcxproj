@@ -171,7 +171,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Lib>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
@@ -210,7 +210,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
@@ -244,7 +244,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Lib>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
@@ -283,7 +283,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
@@ -317,7 +317,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Lib>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
@@ -356,7 +356,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
@@ -389,7 +389,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Lib>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
@@ -427,7 +427,7 @@
     <Lib>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\..\..\..\..\gtk\$(Platform)\$(Configuration)\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libeay32.lib;ssleay32.lib;zlib1.lib;</AdditionalDependencies>
+      <AdditionalDependencies>libssl.lib;libcrypto.lib;zlib1.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(PrjDllPrefix)$(ProjectName)$(PrjDllSuffix).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
@@ -442,6 +442,7 @@
     <ClCompile Include="..\..\src\client.c" />
     <ClCompile Include="..\..\src\config.c" />
     <ClCompile Include="..\..\src\connect.c" />
+    <ClCompile Include="..\..\src\connector.c" />
     <ClCompile Include="..\..\src\curve25519.c" />
     <ClCompile Include="..\..\src\dh.c" />
     <ClCompile Include="..\..\src\ecdh.c" />
@@ -450,8 +451,8 @@
     <ClCompile Include="..\..\src\init.c" />
     <ClCompile Include="..\..\src\kex.c" />
     <ClCompile Include="..\..\src\known_hosts.c" />
+    <ClCompile Include="..\..\src\knownhosts.c" />
     <ClCompile Include="..\..\src\legacy.c" />
-    <ClCompile Include="..\..\src\libcrypto.c" />
     <ClCompile Include="..\..\src\log.c" />
     <ClCompile Include="..\..\src\match.c" />
     <ClCompile Include="..\..\src\messages.c" />
@@ -473,11 +474,23 @@
     <ClCompile Include="..\..\src\wrapper.c" />
     <ClCompile Include="..\..\src\external\bcrypt_pbkdf.c" />
     <ClCompile Include="..\..\src\external\blowfish.c" />
+    <ClCompile Include="..\..\src\external\chacha.c" />
     <ClCompile Include="..\..\src\external\ed25519.c" />
     <ClCompile Include="..\..\src\external\fe25519.c" />
     <ClCompile Include="..\..\src\external\ge25519.c" />
+    <ClCompile Include="..\..\src\external\poly1305.c" />
     <ClCompile Include="..\..\src\external\sc25519.c" />
+    <ClCompile Include="..\..\src\chachapoly.c" />
+    <ClCompile Include="..\..\src\threads\noop.c" />
+    <ClCompile Include="..\..\src\threads\winlocks.c" />
+    <ClCompile Include="..\..\src\threads\libcrypto.c">
+      <ObjectFileName>$(IntDir)/threads/libcrypto.c.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\pki_crypto.c" />
+    <ClCompile Include="..\..\src\ecdh_crypto.c" />
+    <ClCompile Include="..\..\src\libcrypto.c">
+      <ObjectFileName>$(IntDir)/libcrypto.c.obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\sftp.c" />
     <ClCompile Include="..\..\src\sftpserver.c" />
     <ClCompile Include="..\..\src\server.c" />
