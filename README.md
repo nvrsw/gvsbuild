@@ -17,10 +17,11 @@ HexChat developers decided that their script should focus on their specific need
 
 1. Install the following build tools and dependencies:
 
-    * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013 and 2015 are currently supported.
+    * [Visual Studio for Windows Desktop](https://visualstudio.microsoft.com/downloads/?utm_medium=microsoft&utm_source=docs.microsoft.com&utm_campaign=button+cta&utm_content=download+vs2017) - Visual Studio 2017 is currently supported.
     * [msys2](https://msys2.github.io/)
-    * [Python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) (install in C:\Python34), or other package like [Miniconda 3.4](https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe)
+    * [Python 3.4.4](https://www.python.org/ftp/python/3.4.4/python-3.4.4.amd64.msi) (install in C:\Python34)(https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe)
     * [Python 2.7.9](https://www.python.org/ftp/python/2.7.9/python-2.7.9.amd64.msi) (install in C:\Python27) - build only for `libuv`
+    * [nasm](https://www.nasm.us/) - build only for `openssl`
 
 1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
@@ -70,15 +71,15 @@ HexChat developers decided that their script should focus on their specific need
     To build VMS, run:
 
     ```
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release --vs-ver 14
-    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release --vs-ver 14
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x64 -c release --vs-ver 15
+    python build.py build gtk3 clutter libzip libssh libssh2 libuv libcurl libmicrohttpd protobuf-c json-c leveldb -p x86 -c release --vs-ver 15
     ```
 
     To build CMS, run:
 
     ```
-    python build.py build gtk3 libssh libuv librsvg goocanvas -p x64 -c release --vs-ver 14
-    python build.py build gtk3 libssh libuv librsvg goocanvas -p x86 -c release --vs-ver 14
+    python build.py build gtk3 libssh libuv librsvg goocanvas -p x64 -c release --vs-ver 15
+    python build.py build gtk3 libssh libuv librsvg goocanvas -p x86 -c release --vs-ver 15
     ```
 
 1. When the script is done, your GTK+ stack will be found under _C:\gtk-build\gtk_. Enjoy!
