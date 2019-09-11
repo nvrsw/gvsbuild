@@ -542,6 +542,7 @@
     <ClCompile Include="..\..\src\error.c" />
     <ClCompile Include="..\..\src\getpass.c" />
     <ClCompile Include="..\..\src\init.c" />
+    <ClCompile Include="..\..\src\kdf.c" />
     <ClCompile Include="..\..\src\kex.c" />
     <ClCompile Include="..\..\src\known_hosts.c" />
     <ClCompile Include="..\..\src\knownhosts.c" />
@@ -574,6 +575,8 @@
     <ClCompile Include="..\..\src\external\poly1305.c" />
     <ClCompile Include="..\..\src\external\sc25519.c" />
     <ClCompile Include="..\..\src\chachapoly.c" />
+    <ClCompile Include="..\..\src\config_parser.c" />
+    <ClCompile Include="..\..\src\token.c" />
     <ClCompile Include="..\..\src\threads\noop.c" />
     <ClCompile Include="..\..\src\threads\winlocks.c" />
     <ClCompile Include="..\..\src\threads\libcrypto.c">
@@ -584,10 +587,13 @@
     <ClCompile Include="..\..\src\libcrypto.c">
       <ObjectFileName>$(IntDir)/libcrypto.c.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\src\dh_crypto.c" />
     <ClCompile Include="..\..\src\sftp.c" />
     <ClCompile Include="..\..\src\sftpserver.c" />
     <ClCompile Include="..\..\src\server.c" />
     <ClCompile Include="..\..\src\bind.c" />
+    <ClCompile Include="..\..\src\bind_config.c" />
+    <ClCompile Include="..\..\src\dh-gex.c" />
     <ClCompile Include="..\..\src\gzip.c" />
     <ClCompile Include="..\..\src\external\curve25519_ref.c" />
   </ItemGroup>
