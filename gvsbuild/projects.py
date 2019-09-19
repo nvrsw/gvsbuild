@@ -1024,6 +1024,22 @@ class Project_libwebsockets(Tarball, Project):
 
 Project.add(Project_libwebsockets())
 
+class Project_libusb(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'libusb',
+            archive_url = 'https://github.com/libusb/libusb/releases/download/v1.0.23/libusb-1.0.23.tar.bz2',
+            hash = 'db11c06e958a82dac52cf3c65cb4dd2c3f339c8a988665110e0d24d19312ad8d',
+            dependencies = [],
+            )
+
+    def build(self):
+        self.exec_msbuild(r'build\vs%(vs_ver)s\libusb_2017.sln')
+
+        self.install(r'.\COPYING share\doc\libusb')
+
+Project.add(Project_libusb())
+
 class Project_libxml2(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
