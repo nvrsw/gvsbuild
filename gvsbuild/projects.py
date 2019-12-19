@@ -591,19 +591,16 @@ class Project_harfbuzz(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'harfbuzz',
-            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-1.4.5.tar.bz2',
-            hash = 'd0e05438165884f21658154c709075feaf98c93ee5c694b951533ac425a9a711',
+            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.4.tar.xz',
+            hash = '9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12',
             dependencies = ['perl', 'freetype', 'glib'],
             )
 
     def build(self):
-        self.push_location(r'.\win32')
-        self.builder.make_dir(os.path.join(self.build_dir, 'build', 'win32', self.builder.opts.configuration, 'win32'))
-        self.exec_vs(r'nmake /nologo /f Makefile.vc CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PERL="%(perl_dir)s\bin\perl.exe" PREFIX="%(gtk_dir)s" FREETYPE=1 GOBJECT=1')
-        self.exec_vs(r'nmake /nologo /f Makefile.vc install CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PERL="%(perl_dir)s\bin\perl.exe" PREFIX="%(gtk_dir)s" FREETYPE=1 GOBJECT=1')
-        self.pop_location()
-
-        self.install(r'.\COPYING share\doc\harfbuzz')
+        cmake_config = 'Debug' if self.builder.opts.configuration == 'debug' else 'Release'
+        self.exec_vs(r'cmake . -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX="%(gtk_dir)s" -DCMAKE_BUILD_TYPE=' + cmake_config)
+        self.exec_vs(r'nmake /nologo')
+        self.exec_vs(r'nmake /nologo install')
 
 Project.add(Project_harfbuzz())
 
