@@ -885,7 +885,7 @@ class Project_libcurl(Tarball, Project):
             'libcurl',
             archive_url = 'https://github.com/curl/curl/releases/download/curl-7_69_1/curl-7.69.1.tar.gz',
             hash = '01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98',
-            dependencies = ['cmake'],
+            dependencies = ['zlib','openssl'],
             )
 
 #self.exec_vs(r'nmake /nologo /f Makefile.msvc WITH_ICONV=1 LIB="%s" PREFIX="%s" %s' % (lib, self.builder.gtk_dir, nmake_config))
