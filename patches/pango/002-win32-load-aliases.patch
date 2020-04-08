@@ -1,0 +1,16 @@
+diff -bru a/pango/pangowin32-fontmap.c b/pango/pangowin32-fontmap.c
+--- a/pango/pangowin32-fontmap.c	2020-04-08 15:25:18.329616700 +0900
++++ b/pango/pangowin32-fontmap.c	2020-04-08 15:29:15.257562500 +0900
+@@ -625,10 +625,9 @@
+ {
+   struct PangoAlias alias_key;
+   struct PangoAlias *alias;
+-  static gsize aliases_inited = 0;
+ 
+-  if (g_once_init_enter (&aliases_inited))
+-    g_once_init_leave (&aliases_inited, load_aliases (aliases_ht));
++  if (g_hash_table_size (aliases_ht) == 0)
++    load_aliases (aliases_ht);
+ 
+   alias_key.alias = g_ascii_strdown (fontname, -1);
+   alias = g_hash_table_lookup (aliases_ht, &alias_key);

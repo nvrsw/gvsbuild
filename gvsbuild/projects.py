@@ -1613,6 +1613,8 @@ class Project_pango(Tarball, Meson):
             ],
             patches = [
                 '001-ignore-help2man.patch',
+                '002-win32-load-aliases.patch',
+                '003-win32-font-corruption.patch',
             ],
             )
         if self.opts.enable_gi:
