@@ -1882,11 +1882,12 @@ class Project_zlib(Tarball, Project):
         if self.builder.opts.configuration == 'debug':
             options = 'CFLAGS="-nologo -MDd -W3 -Od -Zi -Fd\\"zlib\\""'
 
-        self.exec_vs(r'nmake /nologo /f win32\Makefile.msc STATICLIB=zlib-static.lib IMPLIB=zlib1.lib ' + options)
+        self.exec_vs(r'nmake /nologo /f win32\Makefile.msc STATICLIB=zlib.lib IMPLIB=zlib1.lib ' + options)
 
         self.install(r'.\zlib.h .\zconf.h include')
         self.install(r'.\zlib1.dll .\zlib1.pdb bin')
         self.install(r'.\zlib1.lib lib')
+        self.install(r'.\zlib.lib lib')
 
         self.install(r'.\pc-files\* lib\pkgconfig')
         self.install(r'.\README share\doc\zlib')
