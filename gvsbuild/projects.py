@@ -1219,22 +1219,33 @@ class Project_librsvg(Tarball, Project, _MakeGir):
         self.exec_cmd(r'%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache')
 
 @project_add
-class Project_libcurl(Tarball, CmakeProject):
+class Project_libcurl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libcurl',
-            archive_url = 'https://github.com/curl/curl/releases/download/curl-7_54_0/curl-7.54.0.tar.gz',
-            hash = 'a84b635941c74e26cce69dd817489bec687eb1f230e7d1897fc5b5f108b59adf',
-            dependencies = ['perl', 'cmake', 'ninja', ],
+            archive_url = 'https://github.com/curl/curl/releases/download/curl-7_69_1/curl-7.69.1.tar.gz',
+            hash = '01ae0c123dee45b01bbaef94c0bc00ed2aec89cb2ee0fd598e0d302a6b5e0a98',
+            dependencies = ['zlib','openssl'],
             )
 
     def build(self):
-        CmakeProject.build(self, use_ninja=True)
-        # Fix the pkg-config .pc file, correcting the library's names
-        file_replace(os.path.join(self.pkg_dir, 'lib', 'pkgconfig', 'libcurl.pc'),
-                     [ (' -lcurl', ' -llibcurl_imp'),
-                       ]
-                     )
+
+        machine = r'x64'
+        if self.builder.x86:
+            machine = r'x86'
+
+        options = 'DEBUG=no GEN_PDB=no'
+        if self.builder.opts.configuration == 'debug':
+            options = 'DEBUG=yes GEN_PDB=yes'
+
+        self.push_location(r'.\winbuild')
+        self.exec_vs(r'nmake /nologo /f Makefile.vc mode=dll WITH_SSL=dll WITH_ZLIB=static ENABLE_SSPI=no SSL_PATH="%(gtk_dir)s" ZLIB_PATH="%(gtk_dir)s" ' + options + r' MACHINE=' + machine)
+        self.pop_location()
+
+        bin_dir = r'.\builds\libcurl-vc-%s-release-dll-ssl-dll-zlib-static-ipv6' % (machine)
+        self.install_dir(bin_dir + r'\include')
+        self.install_dir(bin_dir + r'\bin')
+        self.install_dir(bin_dir + r'\lib')
 
         self.install(r'.\COPYING share\doc\libcurl')
 
