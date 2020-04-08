@@ -1320,6 +1320,21 @@ class Project_libtiff4(Tarball, CmakeProject):
         self.install(r'.\COPYRIGHT share\doc\tiff')
 
 @project_add
+class Project_libusb(Tarball, Project):
+    def __init__(self):
+        Project.__init__(self,
+            'libusb',
+            archive_url = 'https://github.com/libusb/libusb/releases/download/v1.0.23/libusb-1.0.23.tar.bz2',
+            hash = 'db11c06e958a82dac52cf3c65cb4dd2c3f339c8a988665110e0d24d19312ad8d',
+            dependencies = [],
+            )
+
+    def build(self):
+        self.exec_msbuild(r'build\vs%(vs_ver)s\libusb_2017.sln')
+
+        self.install(r'.\COPYING share\doc\libusb')
+
+@project_add
 class Project_libuv(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
