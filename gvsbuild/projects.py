@@ -413,7 +413,7 @@ class Project_gdk_pixbuf(Tarball, Meson):
             enable_gi = 'false'
 
         self.add_param('-Djasper=true')
-        self.add_param('-Dnative_windows_loaders=true')
+        self.add_param('-Dnative_windows_loaders=false')
         self.add_param('-Dgir=%s' % (enable_gi, ))
         self.add_param('-Dman=false')
         self.add_param('-Dx11=false')
