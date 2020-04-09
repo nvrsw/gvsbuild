@@ -1,0 +1,48 @@
+diff -bruN a/src/cairo-mutex-list-private.h b/src/cairo-mutex-list-private.h
+--- a/src/cairo-mutex-list-private.h	2019-02-01 10:42:00.000000000 +0900
++++ b/src/cairo-mutex-list-private.h	2020-04-09 09:39:19.711484900 +0900
+@@ -53,6 +53,7 @@
+ 
+ #if CAIRO_HAS_WIN32_FONT
+ CAIRO_MUTEX_DECLARE (_cairo_win32_font_face_mutex)
++CAIRO_MUTEX_DECLARE (_cairo_win32_font_dc_mutex)
+ #endif
+ 
+ #if CAIRO_HAS_XLIB_SURFACE
+diff -bruN a/src/win32/cairo-win32-font.c b/src/win32/cairo-win32-font.c
+--- a/src/win32/cairo-win32-font.c	2019-02-01 10:42:00.000000000 +0900
++++ b/src/win32/cairo-win32-font.c	2020-04-09 09:39:09.213205800 +0900
+@@ -162,8 +162,21 @@
+ static HDC
+ _get_global_font_dc (void)
+ {
+-    static HDC hdc;
++	static DWORD hdc_tls_index;
++	HDC hdc;
+ 
++	if (!hdc_tls_index) {
++	    CAIRO_MUTEX_LOCK (_cairo_win32_font_dc_mutex);
++ 
++	    if (!hdc_tls_index) {
++	        hdc_tls_index = TlsAlloc ();
++	        assert (hdc_tls_index != TLS_OUT_OF_INDEXES);
++	    }
++
++	    CAIRO_MUTEX_UNLOCK (_cairo_win32_font_dc_mutex);
++	}
++
++	hdc = TlsGetValue (hdc_tls_index);
+     if (!hdc) {
+ 	hdc = CreateCompatibleDC (NULL);
+ 	if (!hdc) {
+@@ -176,6 +189,10 @@
+ 	    DeleteDC (hdc);
+ 	    return NULL;
+ 	}
++
++	if (!TlsSetValue(hdc_tls_index, hdc)) {
++	    return NULL;
++	}
+     }
+ 
+     return hdc;
