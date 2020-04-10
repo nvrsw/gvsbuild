@@ -733,8 +733,8 @@ class Project_gtk(Project_gtk_base):
     def __init__(self):
         Project.__init__(self,
             'gtk',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/2.24/gtk+-2.24.31.tar.xz',
-            hash = '68c1922732c7efc08df4656a5366dcc3afdc8791513400dac276009b40954658',
+            archive_url = 'https://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.32.tar.xz',
+            hash = 'b6c8a93ddda5eabe3bfee1eb39636c9a03d2a56c7b62828b359bf197943c582e',
             dependencies = ['atk', 'gdk-pixbuf', 'pango'],
             patches = ['gtk-revert-scrolldc-commit.patch', 'gtk-bgimg.patch', 'gtk-accel.patch',
                        # https://github.com/hexchat/hexchat/issues/1007
@@ -743,6 +743,7 @@ class Project_gtk(Project_gtk_base):
                        'bfdac2f70e005b2504cc3f4ebbdab328974d005a.patch', '61162225f712df648f38fd12bc0817cfa9f79a64.patch',
                        # https://github.com/hexchat/hexchat/issues/2077
                        '0001-GDK-W32-Remove-WS_EX_LAYERED-from-an-opaque-window.patch',
+                       'gtk-duplicate-marshal-defines.patch',
                        ],
             )
         if Project.opts.enable_gi:
