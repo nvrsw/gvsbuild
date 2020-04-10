@@ -1244,7 +1244,7 @@ class Project_libcurl(Tarball, Project):
         self.exec_vs(r'nmake /nologo /f Makefile.vc mode=dll WITH_SSL=dll WITH_ZLIB=static ENABLE_SSPI=no SSL_PATH="%(gtk_dir)s" ZLIB_PATH="%(gtk_dir)s" ' + options + r' MACHINE=' + machine)
         self.pop_location()
 
-        bin_dir = r'.\builds\libcurl-vc-%s-release-dll-ssl-dll-zlib-static-ipv6' % (machine)
+        bin_dir = r'.\builds\libcurl-vc-%s-%s-dll-ssl-dll-zlib-static-ipv6' % (machine, self.builder.opts.configuration)
         self.install_dir(bin_dir + r'\include')
         self.install_dir(bin_dir + r'\bin')
         self.install_dir(bin_dir + r'\lib')
