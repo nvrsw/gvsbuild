@@ -21,7 +21,9 @@ HexChat developers decided that their script should focus on their specific need
 
     * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013, 2015 and 2017 are currently supported.
     * [msys2](https://msys2.github.io/)
-    * [Python 3.6](https://www.python.org/ftp/python/3.6.2/python-3.6.2-amd64.exe) (install in C:\Python36 or use the --python-dir option to tell the script the correct location), or other package like [Miniconda 3](https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe)
+    * [Python 3.6](https://www.python.org/ftp/python/3.6.2/python-3.6.2-amd64.exe)
+    * [Cmake 3.7.2](https://cmake.org/files/v3.7/cmake-3.7.2-win64-x64.msi)
+    * [Perl 5.2.0](https://www.perl.org/get.html)
 
 1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
