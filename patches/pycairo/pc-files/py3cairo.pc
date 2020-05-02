@@ -4,9 +4,8 @@ exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
 
-Name: libpng
-Description: Loads and saves PNG files.
+Name: py3cairo
+Description: Python 3 bindings for cairo
 Version: @version@
-
-Libs: -L${libdir} -llibpng16
-Cflags: -I${includedir}/libpng16
+Requires: cairo
+Cflags: -I${includedir}/pycairo

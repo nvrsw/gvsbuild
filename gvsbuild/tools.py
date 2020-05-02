@@ -146,10 +146,10 @@ class Tool_nuget(Tool):
     def __init__(self):
         Tool.__init__(self,
             'nuget',
-            archive_url = 'https://dist.nuget.org/win-x86-commandline/v4.9.4/nuget.exe',
-            archive_file_name = 'nuget-4.9.4.exe',
-            hash = 'cb139d855d06d07e7da892e8558fe16dcaa65cb381175c506f5ed0a759eaf8f6',
-            dir_part = 'nuget-4.9.4',
+            archive_url = 'https://dist.nuget.org/win-x86-commandline/v5.4.0/nuget.exe',
+            archive_file_name = 'nuget-5.4.0.exe',
+            hash = '880f8d306a65932b11f7edd7768b57d20e78fc618b21d785b303da27facc9a70',
+            dir_part = 'nuget-5.4.0',
             exe_name = 'nuget.exe')
 
     def unpack(self):
@@ -199,7 +199,9 @@ class Tool_python(Tool):
         elif version == '3.6':
             version = '3.6.8'
         elif version == '3.7':
-            version = '3.7.3'
+            version = '3.7.7'
+        elif version == '3.8':
+            version = '3.8.2'
 
         if self.opts.x86:
             name = 'pythonx86'
@@ -238,7 +240,7 @@ class Tool_python(Tool):
             subprocess.check_call(cmd, shell=True)
     
             # update setuptools (to use vs2017 with python 3.5)
-            cmd = py + ' -m pip install --upgrade setuptools'
+            cmd = py + ' -m pip install --upgrade setuptools --no-warn-script-location'
             subprocess.check_call(cmd, shell=True)
     
             # install/update wheel

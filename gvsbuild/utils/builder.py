@@ -25,7 +25,7 @@ import subprocess
 import traceback
 import glob
 import hashlib
-from urllib.request import splittype, urlopen, ContentTooShortError
+from urllib.request import urlopen, ContentTooShortError
 from urllib.error import URLError
 import contextlib
 import ssl
@@ -71,6 +71,8 @@ class Builder(object):
                     rmtree_full(self.working_dir, retry=True)
                 with log.simple_oper('Removing destination dir (%s)' % (self.gtk_dir, )):
                     rmtree_full(self.gtk_dir, retry=True)
+                with log.simple_oper('Removing git expand dir (%s)' % (self.opts.git_expand_dir, )):
+                    rmtree_full(self.opts.git_expand_dir, retry=True)
                 if not opts.keep_tools:
                     with log.simple_oper('Removing tools dir (%s)' % (opts.tools_root_dir, )):
                         rmtree_full(opts.tools_root_dir, retry=True)
@@ -556,20 +558,22 @@ class Builder(object):
         """
         Build one project, return True if skipped
         """
+        # Check if we update the tarball / git
+        proj.builder = self
+        self.__project = proj
+        proj.prepare_build_dir()
+
         if self.opts.fast_build and not proj.clean:
             t = proj.mark_file_exist()
             if t:
                 log.message("Fast build:skipping project %s, built @ %s" % (proj.name, t, ))
+                proj.builder = None
+                self.__project = None
                 return True
 
         proj.mark_file_remove()
         log.start("Building project %s (%s)" % (proj.name, proj.version, ))
         script_title('%s (%s)' % (proj.name, proj.version, ))
-
-        proj.builder = self
-        self.__project = proj
-
-        proj.prepare_build_dir()
 
         proj.pkg_dir = proj.build_dir + "-rel"
         shutil.rmtree(proj.pkg_dir, ignore_errors=True)
@@ -616,8 +620,16 @@ class Builder(object):
             # delta with the old
             new = cur - self.file_built
             if new:
-                # file presents, do the zip
-                zip_file = os.path.join(self.zip_dir, proj.prj_dir)
+                # file presents, do the zip (with the version)
+                if proj.version.startswith('git/'):
+                    t_ver = proj.version[4:]
+                else:
+                    t_ver = proj.version
+
+                _t = [ c if c.isalnum() else '_' for c in t_ver ]
+                ver_part = ''.join(_t)
+
+                zip_file = os.path.join(self.zip_dir, proj.prj_dir + '-' + ver_part)
                 self.make_zip(zip_file, new)
                 # use the current file set
                 self.file_built = cur
@@ -736,7 +748,6 @@ class Builder(object):
         Returns a tuple containing the path to the newly created
         data file as well as the resulting HTTPMessage object.
         """
-        url_type, path = splittype(url)
 
         if ssl_ignore_cert:
             # ignore certificate

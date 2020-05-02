@@ -39,8 +39,8 @@ class Project_adwaita_icon_theme(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'adwaita-icon-theme',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/adwaita-icon-theme/3.34/adwaita-icon-theme-3.34.3.tar.xz',
-            hash = 'e7c2d8c259125d5f35ec09522b88c8fe7ecf625224ab0811213ef0a95d90b908',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/adwaita-icon-theme/3.36/adwaita-icon-theme-3.36.0.tar.xz',
+            hash = '1a172112b6da482d3be3de6a0c1c1762886e61e12b4315ae1aae9b69da1ed518',
             dependencies = ['librsvg', 'python', ],
             )
 
@@ -60,8 +60,8 @@ class Project_atk(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'atk',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/atk/2.34/atk-2.34.1.tar.xz',
-            hash = 'd4f0e3b3d21265fcf2bc371e117da51c42ede1a71f6db1c834e6976bb20997cb',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/atk/2.36/atk-2.36.0.tar.xz',
+            hash = 'fb76247e369402be23f1f5c65d38a9639c1164d934e40f6a9cf3c9e96b652788',
             dependencies = [
                 'ninja',
                 'meson',
@@ -116,8 +116,7 @@ class Project_cairo(Tarball, Project):
         self.install(r'.\util\cairo-gobject\cairo-gobject.h include\cairo')
         self.install(r'.\cairo-version.h include\cairo')
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
-
+        self.install_pc_files()
         self.install(r'.\COPYING share\doc\cairo')
 
 @project_add
@@ -125,8 +124,8 @@ class Project_clutter(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'clutter',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.2.tar.xz',
-            hash = 'e7233314983055e9018f94f56882e29e7fc34d8d35de030789fdcd9b2d0e2e56',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.4.tar.xz',
+            hash = '8b48fac159843f556d0a6be3dbfc6b083fc6d9c58a20a49a6b4919ab4263c4e6',
             dependencies = ['atk','cogl','json-glib'],
             patches = ['001-input-method-editor.patch'],
             )
@@ -142,8 +141,8 @@ class Project_cogl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'cogl',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.2.tar.xz',
-            hash = '39a718cdb64ea45225a7e94f88dddec1869ab37a21b339ad058a9d898782c00d',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.6.tar.xz',
+            hash = '6d134bd3e48c067507167c001200b275997fb9c68b08b48ff038211c8c251b75',
             dependencies = ['python', 'glib','cairo','pango','gdk-pixbuf'],
             patches = ['001-cogl-missing-symbols.patch',
                        '002-cogl-pango-missing-symbols.patch'],
@@ -355,7 +354,7 @@ class Project_fontconfig(Tarball, Project):
         self.install('fontconfig.lib', 'lib')
         self.pop_location()
 
-        self.install(r'.\fontconfig.pc lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\COPYING share\doc\fontconfig')
 
 @project_add
@@ -370,7 +369,7 @@ class Project_freetype(Tarball, CmakeProject):
 
     def build(self):
         CmakeProject.build(self, cmake_params='-DWITH_ZLIB=ON -DWITH_PNG=ON -DDISABLE_FORCE_DEBUG_POSTFIX=ON -DBUILD_SHARED_LIBS=ON', use_ninja=True)
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\docs\LICENSE.TXT share\doc\freetype')
 
 @project_add
@@ -517,8 +516,8 @@ class Project_gobject_introspection(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'gobject-introspection',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gobject-introspection/1.62/gobject-introspection-1.62.0.tar.xz',
-            hash = 'b1ee7ed257fdbc008702bdff0ff3e78a660e7e602efa8f211dc89b9d1e7d90a2',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gobject-introspection/1.64/gobject-introspection-1.64.1.tar.xz',
+            hash = '80beae6728c134521926affff9b2e97125749b38d38744dc901f4010ee3e7fa7',
             dependencies = [
                 'ninja',
                 'meson',
@@ -596,8 +595,8 @@ class Project_gsettings_desktop_schemas(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'gsettings-desktop-schemas',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.34/gsettings-desktop-schemas-3.34.0.tar.xz',
-            hash = '288b04260f7040b0e004a8d59c773cfb4e32df4f1b4a0f9d705c51afccc95ead',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.36/gsettings-desktop-schemas-3.36.0.tar.xz',
+            hash = '764ab683286536324533a58d4e95fc57f81adaba7d880dd0ebbbced63e960ea6',
             dependencies = ['meson', 'ninja', 'pkg-config', 'python', 'glib'],
             patches = [
                 '0003-source-for-dll-in-windows.patch',
@@ -683,6 +682,20 @@ class Project_gst_plugins_bad(Tarball, Meson):
     def build(self):
         Meson.build(self)
         self.install(r'.\COPYING share\doc\gst-plugins-bad')
+
+@project_add
+class Project_gst_python(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(self,
+            'gst-python',
+            archive_url = 'https://gstreamer.freedesktop.org/src/gst-python/gst-python-1.16.2.tar.xz',
+            hash = '208df3148d73d9f416d016564737585d8ea763d91201732d44b5fe688c6288a8',
+            dependencies = ['meson', 'ninja', 'glib', 'gstreamer', 'pygobject'],
+            )
+
+    def build(self):
+        Meson.build(self)
+        self.install(r'.\COPYING share\doc\gst-python')
 
 class _MakeGir(object):
     """
@@ -832,8 +845,8 @@ class Project_gtk3_24(Tarball, Meson):
         Project.__init__(self,
             'gtk3',
             prj_dir='gtk3-24',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/3.24/gtk+-3.24.14.tar.xz',
-            hash = '1c4d69f93ab884fd80c6b95115bfbc12d51ecd029178b6dad3672fdc5ff91e88',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gtk+/3.24/gtk+-3.24.17.tar.xz',
+            hash = 'f210255b221cb0f0db3e7b21399983b715c9dda6eb1e5c2f7fdf38f4f1b6bac0',
             dependencies = ['atk', 'gdk-pixbuf', 'pango', 'libepoxy'],
             patches = [
                 'gtk_update_icon_cache.patch',
@@ -889,7 +902,7 @@ class Project_harfbuzz(Tarball, CmakeProject):
     def build(self):
         CmakeProject.build(self, cmake_params='-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_GOBJECT=ON', use_ninja=True)
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\COPYING share\doc\harfbuzz')
 
 @project_add
@@ -928,9 +941,9 @@ class Project_icu(Tarball, Project):
         self.exec_msbuild(r'source\allinone\allinone.sln /t:cal')
 
         if self.builder.opts.configuration == 'debug':
-            self.install(r'.\pc-files-debug\* lib\pkgconfig')
+            self.install_pc_files('pc-files-debug')
         else:
-            self.install(r'.\pc-files\* lib\pkgconfig')
+            self.install_pc_files()
 
         self.install(r'.\LICENSE share\doc\icu')
         self.install(bindir + r'\* bin')
@@ -1036,8 +1049,8 @@ class Project_libcroco(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'libcroco',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libcroco/0.6/libcroco-0.6.11.tar.xz',
-            hash = '132b528a948586b0dfa05d7e9e059901bca5a3be675b6071a90a90b81ae5a056',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libcroco/0.6/libcroco-0.6.13.tar.xz',
+            hash = '767ec234ae7aa684695b3a735548224888132e063f92db585759b422570621d4',
             dependencies = ['glib', 'libxml2'],
             )
 
@@ -1166,7 +1179,7 @@ class Project_libpng(Tarball, CmakeProject):
     def build(self):
         CmakeProject.build(self, use_ninja=True)
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install('LICENSE share\doc\libpng')
 
 @project_add
@@ -1256,8 +1269,8 @@ class Project_libsoup(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'libsoup',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libsoup/2.68/libsoup-2.68.4.tar.xz',
-            hash = '2d50b12922cc516ab6a7c35844d42f9c8a331668bbdf139232743d82582b3294',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libsoup/2.70/libsoup-2.70.0.tar.xz',
+            hash = '54b020f74aefa438918d8e53cff62e2b1e59efe2de53e06b19a4b07b1f4d5342',
             dependencies = ['libxml2', 'glib-networking', 'sqlite', 'libpsl', 'mit-kerberos'],
             )
 
@@ -1338,50 +1351,20 @@ class Project_libusb(Tarball, Project):
         self.install(r'.\COPYING share\doc\libusb')
 
 @project_add
-class Project_libuv(Tarball, Project):
+class Project_libuv(Tarball, CmakeProject):
     def __init__(self):
         Project.__init__(self,
             'libuv',
-            archive_url = 'https://github.com/libuv/libuv/archive/v1.11.0.tar.gz',
-            archive_file_name = 'libuv-1.11.0.tar.gz',
-            hash = '6ec7eec6ecc24b1a8ffedebedb2fe9313fffb5410de89aaf784dd01080411c7a',
+            archive_url = 'https://github.com/libuv/libuv/archive/v1.35.0.tar.gz',
+            hash = 'ff84a26c79559e511f087aa67925c3b4e0f0aac60cd8039d4d38b292f208ff58',
+            dependencies = [
+                'cmake', 
+                'ninja',  
+                ],
             )
 
     def build(self):
-        rel_dir = r'Release'
-        if self.builder.opts.configuration == 'debug':
-            rel_dir = r'Debug'
-
-        platform = r'x86'
-        if self.builder.x64:
-            platform = r'x64'
-
-        tmp_python = os.getenv('PYTHON')
-        os.environ["PYTHON"] = 'c:\python27\python'
-        os.system(r'%s\vcbuild.bat build static %s %s' % (self._get_working_dir(), self.builder.opts.configuration, platform))
-        if tmp_python != None:
-            os.environ["PYTHON"] = tmp_python
-
-        self.install(r'include\pthread-barrier.h include\libuv')
-        self.install(r'include\stdint-msvc2008.h include\libuv')
-        self.install(r'include\tree.h include\libuv')
-        self.install(r'include\uv.h include\libuv')
-        self.install(r'include\uv-aix.h include\libuv')
-        self.install(r'include\uv-bsd.h include\libuv')
-        self.install(r'include\uv-darwin.h include\libuv')
-        self.install(r'include\uv-errno.h include\libuv')
-        self.install(r'include\uv-linux.h include\libuv')
-        self.install(r'include\uv-sunos.h include\libuv')
-        self.install(r'include\uv-threadpool.h include\libuv')
-        self.install(r'include\uv-unix.h include\libuv')
-        self.install(r'include\uv-version.h include\libuv')
-        self.install(r'include\uv-win.h include\libuv')
-
-        self.push_location(rel_dir)
-        self.install(r'run-benchmarks' + '.exe' + ' bin')
-        self.install(r'run-tests' + '.exe' + ' bin')
-        self.install(r'lib\libuv' + '.lib' + ' lib')
-        self.pop_location()
+        CmakeProject.build(self, use_ninja=True)
 
         self.install(r'.\LICENSE share\doc\libuv')
 
@@ -1397,7 +1380,7 @@ class Project_libxml2(Tarball, Meson):
 
     def build(self):
         Meson.build(self)
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\COPYING share\doc\libxml2')
 
 @project_add
@@ -1417,7 +1400,7 @@ class Project_libyuv(GitRepo, CmakeProject):
     def build(self):
         CmakeProject.build(self, use_ninja=True)
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\LICENSE share\doc\libyuv')
 
 @project_add
@@ -1545,8 +1528,8 @@ class Project_openssl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'openssl',
-            archive_url = 'https://www.openssl.org/source/openssl-1.1.1f.tar.gz',
-            hash = '186c6bfe6ecfba7a5b48c47f8a1673d0f3b0e5ba2e25602dd23b629975da3f35',
+            archive_url = 'https://www.openssl.org/source/openssl-1.1.1g.tar.gz',
+            hash = 'ddb04774f1e32f0c49751e21b67216ac87852ceb056b75209af2443400636d46',
             dependencies = ['perl', 'nasm', 'msys2', ],
             )
 
@@ -1580,7 +1563,7 @@ class Project_openssl(Tarball, Project):
 
         self.install(r'.\cert.pem bin')
         self.install(r'.\LICENSE share\doc\openssl')
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
 
 @project_add
 class Project_opus(Tarball, Project):
@@ -1606,8 +1589,8 @@ class Project_opus(Tarball, Project):
 
         self.install(r'include\* include')
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
-        
+        self.install_pc_files()
+
         self.install(r'COPYING share\doc\opus')
 
 @project_add
@@ -1776,9 +1759,12 @@ class Project_pycairo(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'pycairo',
-            archive_url = 'https://github.com/pygobject/pycairo/releases/download/v1.18.2/pycairo-1.18.2.tar.gz',
-            hash = 'dcb853fd020729516e8828ad364084e752327d4cff8505d20b13504b32b16531',
+            archive_url = 'https://github.com/pygobject/pycairo/releases/download/v1.19.1/pycairo-1.19.1.tar.gz',
+            hash = '2c143183280feb67f5beb4e543fd49990c28e7df427301ede04fc550d3562e84',
             dependencies = ['cairo', 'python'],
+            patches = [
+                'pycairo_py3_8_load_dll.patch',
+                ],
             )
 
     def build(self):
@@ -1795,6 +1781,7 @@ class Project_pycairo(Tarball, Project):
         self.install(r'.\COPYING share\doc\pycairo')
         self.install(r'.\COPYING-LGPL-2.1 share\doc\pycairo')
         self.install(r'.\COPYING-MPL-1.1 share\doc\pycairo')
+        self.install_pc_files()
         self.pop_location()
 
 @project_add
@@ -1802,9 +1789,12 @@ class Project_pygobject(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'pygobject',
-            archive_url = 'https://ftp.acc.umu.se/pub/GNOME/sources/pygobject/3.34/pygobject-3.34.0.tar.xz',
-            hash = '87e2c9aa785f352ef111dcc5f63df9b85cf6e05e52ff04f803ffbebdacf5271a',
+            archive_url = 'https://ftp.acc.umu.se/pub/GNOME/sources/pygobject/3.36/pygobject-3.36.0.tar.xz',
+            hash = '8683d2dfb5baa9e501a9a64eeba5c2c1117eadb781ab1cd7a9d255834af6daef',
             dependencies = ['python', 'pycairo', 'gobject-introspection', 'libffi'],
+            patches = [
+                'pygobject_py3_8_load_dll.patch',
+                ],
             )
 
     def build(self):
@@ -1825,6 +1815,8 @@ class Project_pygobject(Tarball, Project):
         if self.builder.opts.py_egg or self.builder.opts.py_wheel:
             self.install_dir('dist', 'python')
         self.install(r'.\COPYING share\doc\pygobject')
+        self.install(r'.\gi\pygobject.h include\pygobject-3.0')
+        self.install_pc_files()
         self.pop_location()
 
 @project_add
@@ -1832,8 +1824,8 @@ class Project_sqlite(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'sqlite',
-            archive_url = 'https://www.sqlite.org/2016/sqlite-autoconf-3120200.tar.gz',
-            hash = 'fd00770c9afd39db555c78400e52f55e8bd6568c78be23561abb472a22d09abb',
+            archive_url = 'https://www.sqlite.org/2020/sqlite-autoconf-3310100.tar.gz',
+            hash = '62284efebc05a76f909c580ffa5c008a7d22a1287285d68b7825a2b6b51949ae',
             )
 
     def build(self):
@@ -1866,8 +1858,8 @@ class Project_wing(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'wing',
-            archive_url = 'https://gitlab.gnome.org/GNOME/wing/-/archive/v0.3.0/wing-v0.3.0.tar.gz',
-            hash = '4d0d54196aededce6afd983ce99e987c682c63e8c2b24070109f1fb126300c83',
+            archive_url = 'https://gitlab.gnome.org/GNOME/wing/-/archive/v0.3.4/wing-v0.3.4.tar.gz',
+            hash = '7eb01cbfa33988349514963d669f1a86f4bf0a2afff0f8eabf10292f3de7ef8a',
             dependencies = ['ninja', 'meson', 'pkg-config', 'glib'],
             )
 
@@ -1919,7 +1911,7 @@ class Project_zlib(Tarball, Project):
         self.install(r'.\zlib1.lib lib')
         self.install(r'.\zlib.lib lib')
 
-        self.install(r'.\pc-files\* lib\pkgconfig')
+        self.install_pc_files()
         self.install(r'.\README share\doc\zlib')
 
 @project_add
