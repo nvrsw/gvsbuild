@@ -22,11 +22,9 @@ HexChat developers decided that their script should focus on their specific need
     * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013, 2015 and 2017 are currently supported.
     * [msys2](https://msys2.github.io/)
     * [Python 3.6](https://www.python.org/ftp/python/3.6.2/python-3.6.2-amd64.exe)
-    * [Perl 5.2.0](https://www.perl.org/get.html)
 
 1. Environment PATH System Variables
     * C:\Users\ccr\AppData\Local\Programs\Python\Python36
-    * C:\perl520\bin
 
 1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
