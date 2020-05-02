@@ -237,8 +237,8 @@ Examples:
                          help="The directory where you checked out https://github.com/wingtk/gvsbuild.git. Default is $(build-dir)\\github\\gvsbuild.")
     p_build.add_argument('--tools-root-dir',
                          help="The directory where to install the downloaded tools. Default is $(build-dir)\\tools.")
-    p_build.add_argument('--vs-ver', default='12',
-                         help="Visual Studio version 12 (vs2013), 14 (vs2015), 15 (vs2017) etc. Default is 12.")
+    p_build.add_argument('--vs-ver', default='15',
+                         help="Visual Studio version 12 (vs2013), 14 (vs2015), 15 (vs2017), 16 (vs2019) etc. Default is 12.")
     p_build.add_argument('--vs-install-path',
                          help=r"The directory where you installed Visual Studio. Default is 'C:\Program Files (x86)\Microsoft Visual Studio $(vs-ver).0' (for vs-ver <= 14) " +
                          "or 'C:\Program Files (x86)\Microsoft Visual Studio\\20xx' (2017 for vs-ver 15, 2019 for vs-ver 16, ...). "
