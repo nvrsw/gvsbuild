@@ -179,6 +179,7 @@ class Project_cyrus_sasl(Tarball, Project):
                      r'LMDB_LIBPATH="%(gtk_dir)s\lib" OPENSSL_INCLUDE="%(gtk_dir)s\include" OPENSSL_LIBPATH="%(gtk_dir)s\lib" prefix="%(pkg_dir)s" CFG=' + configuration)
 
         self.install(r'.\COPYING share\doc\cyrus-sasl')
+        self.install_pc_files()
 
 
 @project_add
@@ -922,7 +923,7 @@ class Project_icu(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'icu',
-            archive_url = 'http://download.icu-project.org/files/icu4c/63.1/icu4c-63_1-src.zip',
+            archive_url = 'https://github.com/unicode-org/icu/releases/download/release-63-1/icu4c-63_1-src.zip',
             hash = '3d957deabf75e96c35918355eac4da3e728fc222b9b4bdb2663652f76ee51772',
             version='63.1',
             )
@@ -1483,6 +1484,7 @@ class Project_lz4(Tarball, Project):
         self.install(r'visual\%(vs_ver_year)s\bin\%(platform)s_%(configuration)s\liblz4.lib lib')
 
         self.install(r'.\lib\LICENSE share\doc\lz4')
+        self.install_pc_files()
 
 @project_add
 class Project_mit_kerberos(Tarball, Project):
@@ -1753,6 +1755,7 @@ class Project_protobuf_c(Tarball, CmakeProject):
         CmakeProject.build(self, use_ninja=True, source_part='build-cmake')
 
         self.install(r'.\LICENSE share\doc\protobuf-c')
+        self.install_pc_files()
 
 @project_add
 class Project_pycairo(Tarball, Project):
