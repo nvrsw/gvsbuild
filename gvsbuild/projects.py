@@ -972,17 +972,17 @@ class Project_jasper(Tarball, CmakeProject):
         self.install(r'.\LICENSE share\doc\jasper')
 
 @project_add
-class Project_jsonc(Tarball, Project):
+class Project_jsonc(Tarball, CmakeProject):
     def __init__(self):
         Project.__init__(self,
             'json-c',
-            archive_url = 'https://github.com/json-c/json-c/archive/json-c-0.12.1-20160607.tar.gz',
-            hash = '989e09b99ded277a0a651cd18b81fcb76885fea08769d7a21b6da39fb8a34816',
-            patches = ['json-c-0.12.1-20160607.patch'],
+            archive_url = 'https://github.com/json-c/json-c/archive/json-c-0.15-20200726.tar.gz',
+            hash = '4ba9a090a42cf1e12b84c64e4464bb6fb893666841d5843cc5bef90774028882',
+            dependencies = ['cmake', 'ninja', 'nasm', ],
             )
 
     def build(self):
-        self.exec_msbuild_gen(r'build\win32', 'json-c.sln')
+        CmakeProject.build(self, use_ninja=True)
 
         self.install(r'.\COPYING share\doc\json-c')
 
