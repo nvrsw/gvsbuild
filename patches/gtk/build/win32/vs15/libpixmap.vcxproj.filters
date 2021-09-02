@@ -15,10 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-draw.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-main.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-render.c"><Filter>Source Files</Filter></ClCompile>
-
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-draw.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-main.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-render.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\modules\engines\pixbuf\pixbuf-style.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

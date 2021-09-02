@@ -153,10 +153,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-draw.c" />
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-main.c" />
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.c" />
-   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-render.c" />
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-draw.c" />
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-main.c" />
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.c" />
+    <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-render.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="gdk.vcxproj">
@@ -167,6 +167,10 @@
       <Project>{fc5aadb5-95cd-4bf0-ba8b-0c16fe7073f5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.h" />
+    <ClInclude Include="..\..\..\modules\engines\pixbuf\pixbuf-style.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
