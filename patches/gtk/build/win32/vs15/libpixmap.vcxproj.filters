@@ -15,9 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-   <ClCompile Include="..\..\..\modules\engines\ms-windows\msw_rc_style.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\ms-windows\msw_style.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\ms-windows\msw_theme_main.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\..\modules\engines\ms-windows\xp_theme.c"><Filter>Source Files</Filter></ClCompile>
+   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-draw.c"><Filter>Source Files</Filter></ClCompile>
+   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-main.c"><Filter>Source Files</Filter></ClCompile>
+   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-rc-style.c"><Filter>Source Files</Filter></ClCompile>
+   <ClCompile Include="..\..\..\modules\engines\pixbuf\pixbuf-render.c"><Filter>Source Files</Filter></ClCompile>
+
   </ItemGroup>
 </Project>

@@ -109,6 +109,10 @@
       <Project>{7660fb4e-2ae6-483e-8813-0974cbe6f97f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="libpixmap.vcxproj">
+      <Project>{F508DFC0-CF9C-42F9-8B74-59F1F16AC3CD}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="libadwaita.vcxproj">
       <Project>{D91BE944-6E77-4ED2-BAFB-DF4583B6C13F}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
