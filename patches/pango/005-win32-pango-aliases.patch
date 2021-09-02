@@ -1,0 +1,29 @@
+diff -bru a/pango/pangowin32-fontmap.c b/pango/pangowin32-fontmap.c
+--- a/pango/pangowin32-fontmap.c	2019-10-25 12:45:11.000000000 +0900
++++ b/pango/pangowin32-fontmap.c	2021-09-02 16:18:50.550499600 +0900
+@@ -454,11 +454,11 @@
+    * has ony one. One solution is to install the free DejaVu fonts
+    * that are popular on Linux. They are listed here first.
+    */
+-  "sans = \"dejavu sans,tahoma,arial unicode ms,lucida sans unicode,browallia new,mingliu,simhei,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
+-  "sans-serif = \"dejavu sans,tahoma,arial unicode ms,lucida sans unicode,browallia new,mingliu,simhei,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
+-  "serif = \"dejavu serif,georgia,angsana new,mingliu,simsun,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
+- "mono = \"dejavu sans mono,courier new,lucida console,courier monothai,mingliu,simsun,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
+-  "monospace = \"dejavu sans mono,courier new,lucida console,courier monothai,mingliu,simsun,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
++  "sans = \"dejavu sans,tahoma,arial unicode ms,lucida sans unicode,browallia new,mingliu,simhei,malgun gothic,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
++  "sans-serif = \"dejavu sans,tahoma,arial unicode ms,lucida sans unicode,browallia new,mingliu,simhei,malgun gothic,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
++  "serif = \"dejavu serif,georgia,angsana new,mingliu,simsun,malgun gothic,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
++ "mono = \"dejavu sans mono,courier new,lucida console,courier monothai,mingliu,simsun,malgun gothic,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
++  "monospace = \"dejavu sans mono,courier new,lucida console,courier monothai,mingliu,simsun,malgun gothic,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
+   "emoji = \"segoe ui emoji,segoe ui symbol,segoe ui\"",
+   "cursive = \"commic sans ms\"",
+   "fantasy = \"gabriola,impact\"",
+@@ -583,7 +583,7 @@
+        * but I couldn't find any docs for it. Feel free to improve this */
+       g_string_append (line_buffer,
+                        ",gisha,leelawadee,arial unicode ms,browallia new,"
+-                       "mingliu,simhei,gulimche,ms gothic,sylfaen,kartika,"
++                       "mingliu,simhei,malgun gothic,gulimche,ms gothic,sylfaen,kartika,"
+                        "latha,mangal,raavi");
+ 
+       g_string_append (line_buffer, "\"");
