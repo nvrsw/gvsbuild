@@ -69,8 +69,8 @@ HexChat developers decided that their script should focus on their specific need
 1. To build CMS
 
     ```
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo -p x86 -c release --vs-ver 15
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo -p x64 -c release --vs-ver 15
+    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 15
+    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 15
     ```
 
 1. When the script is done, your GTK+ stack will be found under _C:\gtk-build\gtk_. Enjoy!
