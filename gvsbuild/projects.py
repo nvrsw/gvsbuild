@@ -84,10 +84,11 @@ class Project_cairo(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'cairo',
-            archive_url = 'https://cairographics.org/snapshots/cairo-1.17.2.tar.xz',
-            hash = '6b70d4655e2a47a22b101c666f4b29ba746eda4aa8a0f7255b32b2e9408801df',
+            archive_url = 'https://gitlab.freedesktop.org/ebassi/cairo/-/archive/1.17.2/cairo-1.17.2.tar.gz',
+            hash = '04a6618d33a68286ff2f904ffcd1f9c107479e53970eb532f6ad4991dadc6778',
             dependencies = ['fontconfig', 'glib', 'pixman', 'libpng'],
-            patches = ['001-win32-font-corruption.patch'],
+            patches = ['001-win32-font-corruption.patch',
+                       '002-win32-cairo-script.patch'],
             )
 
     def build(self):
@@ -96,11 +97,18 @@ class Project_cairo(Tarball, Project):
         self.exec_vs(r'make -f Makefile.win32 CFG=%(configuration)s ARCH=%(platform)s', add_path=os.path.join(self.builder.opts.msys_dir, 'usr', 'bin'))
         self.pop_location()
 
+        self.push_location(r'.\util\cairo-script')
+        self.exec_vs(r'make -f Makefile.win32 CFG=%(configuration)s ARCH=%(platform)s', add_path=os.path.join(self.builder.opts.msys_dir, 'usr', 'bin'))
+        self.pop_location()
+
         self.install(r'.\src\%(configuration)s\cairo.dll bin')
         self.install(r'.\util\cairo-gobject\%(configuration)s\cairo-gobject.dll bin')
 
         self.install(r'.\src\%(configuration)s\cairo.lib lib')
         self.install(r'.\util\cairo-gobject\%(configuration)s\cairo-gobject.lib lib')
+
+        self.install(r'.\util\cairo-script\%(configuration)s\cairo-script-interpreter.lib lib')
+        self.install(r'.\util\cairo-script\cairo-script-interpreter.h include\cairo')
 
         self.install(r'.\src\cairo.h include\cairo')
         self.install(r'.\src\cairo-deprecated.h include\cairo')
@@ -393,8 +401,8 @@ class Project_gdk_pixbuf(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'gdk-pixbuf',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.40/gdk-pixbuf-2.40.0.tar.xz',
-            hash = '1582595099537ca8ff3b99c6804350b4c058bb8ad67411bbaae024ee7cead4e6',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.6.tar.xz',
+            hash = 'c4a6b75b7ed8f58ca48da830b9fa00ed96d668d3ab4b1f723dcf902f78bde77f',
             dependencies = [
                 'ninja',
                 'pkg-config',
@@ -459,11 +467,10 @@ class Project_glib(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'glib',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.64/glib-2.64.2.tar.xz',
-            hash = '9a2f21ed8f13b9303399de13a0252b7cbcede593d26971378ec6cb90e87f2277',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.69/glib-2.69.3.tar.xz',
+            hash = '47af2c6e06becee44d447ae7d1212dbab255b002b5141d9b62a4357c0ecc058f',
             dependencies = ['ninja', 'meson', 'pkg-config', 'gettext', 'libffi', 'zlib'],
-            patches = ['glib-package-installation-directory.patch',
-                       'gwin32-remove-automatic-handling-of-AccessViolation-.patch'],
+            patches = ['glib-package-installation-directory.patch'],
             )
 
     def build(self):
@@ -517,8 +524,8 @@ class Project_gobject_introspection(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'gobject-introspection',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gobject-introspection/1.64/gobject-introspection-1.64.1.tar.xz',
-            hash = '80beae6728c134521926affff9b2e97125749b38d38744dc901f4010ee3e7fa7',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gobject-introspection/1.69/gobject-introspection-1.69.0.tar.xz',
+            hash = 'c668cbe4a3aad7539e2cf669ab576ce7fbadac6890472f4095ca215dbbebee99',
             dependencies = [
                 'ninja',
                 'meson',
@@ -867,6 +874,23 @@ class Project_gtk3_24(Tarball, Meson):
         self.install(r'.\COPYING share\doc\gtk3')
 
 @project_add
+class Project_gtk4(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(self,
+            'gtk4',
+            archive_url = 'https://gitlab.gnome.org/GNOME/gtk/-/archive/4.4.0/gtk-4.4.0.tar.gz',
+            hash = '0b67e5f1ecb42a9c0ca0f2d95bc5e038aa2ee20124847c214b35d59d8b9b2cc3',
+            dependencies = ['libjpeg-turbo',
+                            'python',
+                            'ninja',
+                            'meson'],
+            patches = [],
+            )
+
+    def build(self):
+        Meson.build(self)
+
+@project_add
 class Project_gtksourceview3(Tarball, Project, _MakeGir):
     def __init__(self):
         Project.__init__(self,
@@ -891,20 +915,17 @@ class Project_gtksourceview3(Tarball, Project, _MakeGir):
             self.make_single_gir('gtksourceview', prj_dir='gtksourceview3')
 
 @project_add
-class Project_harfbuzz(Tarball, CmakeProject):
+class Project_harfbuzz(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'harfbuzz',
-            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.4.tar.xz',
-            hash = '9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12',
+            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.7.tar.xz',
+            hash = '49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218',
             dependencies = ['python', 'freetype', 'pkg-config', 'glib'],
             )
 
     def build(self):
-        CmakeProject.build(self, cmake_params='-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_GOBJECT=ON', use_ninja=True)
-
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\harfbuzz')
+        Meson.build(self)
 
 @project_add
 class Project_hicolor_icon_theme(Tarball, Project):
@@ -1683,7 +1704,7 @@ class Project_pkgconf(GitRepo, Meson):
             prj_dir = 'pkgconf',
             repo_url = 'https://github.com/pkgconf/pkgconf.git',
             fetch_submodules = False,
-            tag = 'pkgconf-1.5.4',
+            tag = 'pkgconf-1.8.0',
             dependencies = ['ninja', 'meson'],
             patches = [ '0001-vs2013.patch',
                       ],

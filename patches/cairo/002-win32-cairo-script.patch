@@ -1,0 +1,186 @@
+diff -bru a/util/cairo-script/cairo-script-file.c b/util/cairo-script/cairo-script-file.c
+--- a/util/cairo-script/cairo-script-file.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-file.c	2021-09-09 09:58:52.251117100 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ 
+@@ -162,7 +164,7 @@
+     file->base.ref = 1;
+ 
+     if (src->deflate) {
+-	uLongf len = src->deflate;
++	uint64_t len = src->deflate;
+ 	csi_object_t tmp_obj;
+ 	csi_string_t *tmp_str;
+ 	csi_status_t status;
+diff -bru a/util/cairo-script/cairo-script-hash.c b/util/cairo-script/cairo-script-hash.c
+--- a/util/cairo-script/cairo-script-hash.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-hash.c	2021-09-09 09:57:21.200398000 +0900
+@@ -36,7 +36,9 @@
+  *	Karl Tomlinson <karlt+@karlt.net>, Mozilla Corporation
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ 
+diff -bru a/util/cairo-script/cairo-script-interpreter.c b/util/cairo-script/cairo-script-interpreter.c
+--- a/util/cairo-script/cairo-script-interpreter.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-interpreter.c	2021-09-09 09:57:21.200398000 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ #include "cairo.h"
+diff -bru a/util/cairo-script/cairo-script-objects.c b/util/cairo-script/cairo-script-objects.c
+--- a/util/cairo-script/cairo-script-objects.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-objects.c	2021-09-09 09:57:21.197192300 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ 
+diff -bru a/util/cairo-script/cairo-script-operators.c b/util/cairo-script/cairo-script-operators.c
+--- a/util/cairo-script/cairo-script-operators.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-operators.c	2021-09-09 09:58:52.251117100 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ /* TODO real path type */
+ 
+@@ -1757,7 +1759,7 @@
+ static void *
+ inflate_string (csi_t *ctx, csi_string_t *src)
+ {
+-    uLongf len;
++    uint64_t len;
+     uint8_t *bytes;
+ 
+     len = src->deflate;
+diff -bru a/util/cairo-script/cairo-script-scanner.c b/util/cairo-script/cairo-script-scanner.c
+--- a/util/cairo-script/cairo-script-scanner.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-scanner.c	2021-09-09 09:58:49.426137800 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ 
+@@ -662,7 +664,7 @@
+     }
+ 
+     if (deflate) {
+-        uLongf len = be32 (*(uint32_t *) scan->buffer.base);
++        uint64_t len = be32 (*(uint32_t *) scan->buffer.base);
+ 	Bytef *source = (Bytef *) (scan->buffer.base + sizeof (uint32_t));
+ 
+ 	status = csi_string_deflate_new (ctx, &obj,
+diff -bru a/util/cairo-script/cairo-script-stack.c b/util/cairo-script/cairo-script-stack.c
+--- a/util/cairo-script/cairo-script-stack.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/cairo-script-stack.c	2021-09-09 09:57:21.150421200 +0900
+@@ -32,7 +32,9 @@
+  *	Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script-private.h"
+ 
+diff -bru a/util/cairo-script/csi-bind.c b/util/cairo-script/csi-bind.c
+--- a/util/cairo-script/csi-bind.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/csi-bind.c	2021-09-09 09:57:21.150421200 +0900
+@@ -32,7 +32,9 @@
+  *      Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo.h"
+ #include "cairo-script-interpreter.h"
+diff -bru a/util/cairo-script/csi-exec.c b/util/cairo-script/csi-exec.c
+--- a/util/cairo-script/csi-exec.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/csi-exec.c	2021-09-09 09:57:21.150421200 +0900
+@@ -32,7 +32,9 @@
+  *      Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo.h"
+ #include "cairo-script-interpreter.h"
+diff -bru a/util/cairo-script/csi-replay.c b/util/cairo-script/csi-replay.c
+--- a/util/cairo-script/csi-replay.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/csi-replay.c	2021-09-09 09:57:21.149452900 +0900
+@@ -32,7 +32,9 @@
+  *      Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo.h"
+ #include "cairo-script-interpreter.h"
+diff -bru a/util/cairo-script/csi-trace.c b/util/cairo-script/csi-trace.c
+--- a/util/cairo-script/csi-trace.c	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/csi-trace.c	2021-09-09 09:57:18.488181600 +0900
+@@ -32,7 +32,9 @@
+  *      Chris Wilson <chris@chris-wilson.co.uk>
+  */
+ 
++#if HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #include "cairo-script.h"
+ #include "cairo-script-interpreter.h"
+diff -bru a/util/cairo-script/Makefile.win32 b/util/cairo-script/Makefile.win32
+--- a/util/cairo-script/Makefile.win32	2019-02-01 12:33:41.000000000 +0900
++++ b/util/cairo-script/Makefile.win32	2021-09-09 10:01:25.640470300 +0900
+@@ -2,9 +2,9 @@
+ include $(top_srcdir)/build/Makefile.win32.common
+ include $(top_srcdir)/util/cairo-script/Makefile.sources
+ 
+-all: inform $(CFG)/libcairo-script-interpreter.lib
++all: inform $(CFG)/cairo-script-interpreter.lib
+ 
+ libcairo_script_interpreter_OBJECTS = $(patsubst %.c, $(CFG)/%-static.obj, $(libcairo_script_interpreter_sources))
+ 
+-$(CFG)/libcairo-script-interpreter.lib: $(libcairo_script_interpreter_OBJECTS)
++$(CFG)/cairo-script-interpreter.lib: $(libcairo_script_interpreter_OBJECTS)
+ 	@$(AR) $(CAIRO_ARFLAGS) -OUT:$@ $(libcairo_script_interpreter_OBJECTS)
+Only in b/util/cairo-script: release

@@ -86,11 +86,11 @@ class Tool_meson(Tool):
     def __init__(self):
         Tool.__init__(self,
             'meson',
-            archive_url = 'https://github.com/mesonbuild/meson/archive/0.51.2.zip',
-            archive_file_name = 'meson-0.51.2.zip',
-            hash = 'bf4ca25194341988c7a8e4ac27c43ab68d7b6fcde2fd050c4b5dbaf28b678c7a',
+            archive_url = 'https://github.com/mesonbuild/meson/archive/refs/tags/0.59.1.zip',
+            archive_file_name = 'meson-0.59.1.zip',
+            hash = 'cfe374a292bf5bd289fe95e43c89a0061baa51908ff0a86ed6d0033ef83b96ef',
             dependencies = [ 'python', ],
-            dir_part = 'meson-0.51.2',
+            dir_part = 'meson-0.59.1',
             exe_name = 'meson.py')
 
     def unpack(self):
@@ -132,10 +132,10 @@ class Tool_ninja(Tool):
     def __init__(self):
         Tool.__init__(self,
             'ninja',
-            archive_url = 'https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip',
-            archive_file_name = 'ninja-win-1.8.2.zip',
-            hash = 'c80313e6c26c0b9e0c241504718e2d8bbc2798b73429933adf03fdc6d84f0e70',
-            dir_part = 'ninja-1.8.2',
+            archive_url = 'https://github.com/ninja-build/ninja/archive/refs/tags/v1.10.2.zip',
+            archive_file_name = 'v1.10.2.zip',
+            hash = '4e7b67da70a84084d5147a97fcfb867660eff55cc60a95006c389c4ca311b77d',
+            dir_part = 'ninja-1.10.2',
             exe_name = 'ninja.exe')
 
     def unpack(self):
