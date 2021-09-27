@@ -1207,32 +1207,19 @@ class Project_librsvg(Tarball, Project, _MakeGir):
     def __init__(self):
         Project.__init__(self,
             'librsvg',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/librsvg/2.40/librsvg-2.40.20.tar.xz',
-            hash = 'cff4dd3c3b78bfe99d8fcfad3b8ba1eee3289a0823c0e118d78106be6b84c92b',
-            dependencies = ['libcroco', 'cairo', 'pango', 'gdk-pixbuf', 'gtk3'],
-            patches = [
-                'vs2019-support.patch'
-                ],
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/librsvg/2.52/librsvg-2.52.0.tar.xz',
+            hash = 'bd821fb3e16494b61f5185addd23b726b064f203122b3ab4b3d5d7a44e6bf393',
+            dependencies = ['libcroco', 'cairo', 'pango', 'gdk-pixbuf'],
+            patches = [],
             )
-        if Project.opts.enable_gi:
-            self.add_dependency('gobject-introspection')
 
     def build(self):
-        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
-        self.exec_msbuild_gen(r'build\win32', 'librsvg.sln', add_pars='/p:UseEnv=True')
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\glib-2.0\include' % (self.builder.gtk_dir, ))
 
-        if Project.opts.enable_gi:
-            self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
-            self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\include' % (self.builder.gtk_dir, ))
-            self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
-            self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
-
-            self.make_single_gir('rsvg', prj_dir='librsvg')
-
-        self.install(r'.\COPYING share\doc\librsvg')
-
-    def post_install(self):
-        self.exec_cmd(r'%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache')
+        self.push_location('win32')
+        self.exec_vs(r'nmake install -f Makefile.vc CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PREFIX="%(gtk_dir)s"')
+        self.pop_location()
 
 @project_add
 class Project_libcurl(Tarball, Project):

@@ -828,6 +828,7 @@ class Builder(object):
         if '%' in s:
             d = dict(platform=self.opts.platform, configuration=self.opts.configuration, build_dir=self.opts.build_dir, vs_ver=self.opts.vs_ver,
                      gtk_dir=self.gtk_dir,
+                     python_dir=self.opts.python_dir,
                      vs_ver_year=self.vs_ver_year, )
             python = None
             if self.__project is not None:
