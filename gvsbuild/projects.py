@@ -1886,8 +1886,8 @@ class Project_zlib(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'zlib',
-            archive_url = 'http://www.zlib.net/zlib-1.2.11.tar.xz',
-            hash = '4ff941449631ace0d4d203e3483be9dbc9da454084111f97ea0a2114e19bf066',
+            archive_url = 'http://www.zlib.net/zlib-1.3.tar.xz',
+            hash = '8a9ba2898e1d0d774eca6ba5b4627a11e5588ba85c8851336eb38de4683050a7',
             )
 
     def build(self):
