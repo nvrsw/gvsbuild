@@ -22,7 +22,6 @@ HexChat developers decided that their script should focus on their specific need
     * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013, 2015 and 2017 are currently supported.
     * [msys2](https://msys2.github.io/)
     * [Python 3.7](https://www.python.org/ftp/python/3.7.0/python-3.7.0-amd64.exe)
-    * [CMake 3.28](https://github.com/Kitware/CMake/releases/download/v3.28.0-rc5/cmake-3.28.0-rc5-windows-x86_64.msi)
 
 1. Environment PATH System Variables
     * C:\Python37
