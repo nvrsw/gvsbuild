@@ -1210,7 +1210,7 @@ class Project_librsvg(Tarball, Project, _MakeGir):
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/librsvg/2.52/librsvg-2.52.0.tar.xz',
             hash = 'bd821fb3e16494b61f5185addd23b726b064f203122b3ab4b3d5d7a44e6bf393',
             dependencies = ['libcroco', 'cairo', 'pango', 'gdk-pixbuf'],
-            patches = [],
+            patches = ['001-library-link.patch'],
             )
 
     def build(self):
