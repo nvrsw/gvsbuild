@@ -21,10 +21,10 @@ HexChat developers decided that their script should focus on their specific need
 
     * [Visual Studio for Windows Desktop](http://www.visualstudio.com/downloads) - 2013, 2015 and 2017 are currently supported.
     * [msys2](https://msys2.github.io/)
-    * [Python 3.6](https://www.python.org/ftp/python/3.6.2/python-3.6.2-amd64.exe)
+    * [Python 3.7.7](https://www.python.org/ftp/python/3.7.7/python-3.7.7-amd64.exe)
 
 1. Environment PATH System Variables
-    * C:\Users\ccr\AppData\Local\Programs\Python\Python36
+    * C:\Python37
 
 1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
@@ -68,9 +68,16 @@ HexChat developers decided that their script should focus on their specific need
     ```
 1. To build CMS
 
+    ``sh
+    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 16
+    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 16
     ```
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 15
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 15
+
+1. To build Kakudai Window Manager
+
+    ``sh
+    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x86 --vs-ver 16
+    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x64 --vs-ver 16
     ```
 
 1. When the script is done, your GTK+ stack will be found under _C:\gtk-build\gtk_. Enjoy!
