@@ -32,21 +32,21 @@ HexChat developers decided that their script should focus on their specific need
 
 1. Now start a command-line window as a regular user. Go to the _gvsbuild_ directory and start building with the script. For example, to build 32-bit GTK+ 3 and its dependencies, run:
 
-    ```
+    ```sh
     cd C:\gtk-build\github\gvsbuild
     python .\build.py build gtk3
     ```
 
     To build the 64-bit version, run:
 
-    ```
+    ```sh
     cd C:\gtk-build\github\gvsbuild
     python .\build.py build -p x64 gtk3
     ```
 
     For more information about the possible commands. Run
 
-    ```
+    ```sh
     python .\build.py --help
     ```
 
@@ -63,19 +63,19 @@ HexChat developers decided that their script should focus on their specific need
 
     Even if the format is not the easier to write or read in this way we eliminate the problem of escaping spaces is file names and directories. Then you can use it:
 
-    ```
+    ```sh
     python .\build.py build @vs2015-release.pro gtk3-full
     ```
 1. To build CMS
 
-    ``sh
+    ```sh
     python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 16
     python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 16
     ```
 
 1. To build Kakudai Window Manager
 
-    ``sh
+    ```sh
     python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x86 --vs-ver 16
     python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x64 --vs-ver 16
     ```
@@ -94,7 +94,7 @@ Patches included in the repository are licensed under the license terms of the p
 
 To see and analyze the dependency between the various projects, in text or in a Graphviz format, use the script deps.py:
 
-    ```
+    ```sh
     cd C:\gtk-build\github\gvsbuild
     python .\deps.py -g -o test.gv
     ```
