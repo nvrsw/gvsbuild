@@ -7,7 +7,7 @@ set -e
 
 CURDIR=$(cygpath -w $(realpath $(dirname ${0})))
 GVSBUILD_DIR=${CURDIR}
-DOCKERDIR=${GVSBUILD_DIR}/docker
+DOCKER_DIR=${GVSBUILD_DIR}/docker
 DOCKER_DIST=windows
 DOCKER_TAG=gvsbuild-${DOCKER_DIST}
 DOCKER_GVSBUILD_DIR=$(cygpath -w /c/git/gvsbuild)
@@ -35,9 +35,9 @@ docker_image() {
   ECHO "Build '${DOCKER_TAG}' docker image '${DOCKER_TAG}'"
   docker build \
     -t ${DOCKER_TAG} \
-    -f ${DOCKERDIR}/Dockerfile.${DOCKER_DIST} \
+    -f ${DOCKER_DIR}/Dockerfile.${DOCKER_DIST} \
     --no-cache \
-    ${DOCKERDIR}
+    ${DOCKER_DIR}
 }
 
 docker_build() {
