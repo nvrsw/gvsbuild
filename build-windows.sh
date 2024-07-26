@@ -44,6 +44,8 @@ docker_build() {
   ECHO "Build GVSBuild with docker image '${DOCKER_TAG}'"
 
   docker run --rm -t \
+    --cpu-count ${NUMBER_OF_PROCESSORS} \
+    --cpus ${NUMBER_OF_PROCESSORS} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
     ${DOCKER_TAG} ${DOCKER_GVSBUILD_DIR}
 }
