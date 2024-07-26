@@ -24,7 +24,7 @@ set SourcePath=%1
 echo "Build GVSBuild"
 
 for %%a in ("x86" "x64") do (
-  start python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %%~a -c release --vs-ver 16
+  call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %%~a -c release --vs-ver 16
 )
 
 echo "Build done"
