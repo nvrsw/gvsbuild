@@ -103,9 +103,6 @@ if (${p}.ExitCode -ne 0) {
 }
 Write-Host "MSYS2 (${env:MSYS2_DIST_NAME}) installed"
 
-# Set python path
-setx /M PATH "${env:PATH};C:\msys64\usr\bin"
-
 # Download Python
 $python_dist_name = "python-${env:PYTHON_VERSION}-amd64.exe"
 $python_dist_url = "${env:PYTHON_URL}/${env:PYTHON_VERSION}/${python_dist_name}"
@@ -122,9 +119,6 @@ if (${p}.ExitCode -ne 0) {
   throw "Failed to install Python ${env:PYTHON_VERSION}"
 }
 Write-Host "Python ${env:PYTHON_VERSION} installed into ${env:PYTHON_HOME}"
-
-# Set python path
-setx /M PATH "${env:PATH};${env:PYTHON_HOME}"
 
 # Download 7z
 $7z_url = "${env:7Z_URL}/${env:7Z_DIST_NAME}"
@@ -143,8 +137,8 @@ if (${p}.ExitCode -ne 0) {
 }
 Write-Host "7z (${env:7Z_DIST_NAME}) installed"
 
-# Set 7z path
-setx /M PATH "${env:PATH};c:\7zip"
+# Set path
+setx /M PATH "${env:PATH};C:\msys64\usr\bin;${env:PYTHON_HOME};c:\7zip"
 
 # Cleanup
 Write-Host "Removing all files and directories from ${env:TMP}"

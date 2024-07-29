@@ -23,8 +23,8 @@ ADD ["windows/install.ps1", "C:/tmp/"]
 RUN powershell -ExecutionPolicy Bypass -File "C:\tmp\install.ps1" && \
   powershell "Remove-Item -Path 'C:\tmp' -Recurse -Force"
 
-ADD ["windows/build.bat", "C:/build/"]
-ENTRYPOINT ["C:/build/build.bat"]
+ADD ["windows/build.bat", "C:/"]
+ENTRYPOINT ["C:/build.bat"]
 
 ARG image_version=""
 ARG image_revision=""

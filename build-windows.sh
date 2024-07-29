@@ -63,6 +63,8 @@ docker_console() {
   ECHO "Run console in docker image '${DOCKER_TAG}'"
   winpty docker run --rm -it \
     --entrypoint cmd \
+    -v ${DOCKER_GVSBUILD_SRC}:${DOCKER_GVSBUILD_SRC_DIR} \
+    -v ${DOCKER_GVSBUILD_TOOLS}:${DOCKER_GVSBUILD_TOOLS_DIR} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
     ${DOCKER_TAG}
 }
