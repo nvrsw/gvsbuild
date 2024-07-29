@@ -39,6 +39,31 @@ Write-Host "Downloading Visual Studio Locator from ${vswhere_url} into ${vswhere
 (New-Object System.Net.WebClient).DownloadFile("${vswhere_url}", "${vswhere_dist}")
 Write-Host "Visual Studio Locator ${env:VSWHERE_VERSION} installed"
 
+# Download Rust
+$rust_url = "${env:RUST_URL}/${env:RUST_TOOLCHAIN_X86_64}/${env:RUST_DIST_NAME}"
+$rust_dist = "${env:TMP}\${env:RUST_DIST_NAME}"
+Write-Host "Downloading Rust from ${rust_url} into ${rust_dist}"
+(New-Object System.Net.WebClient).DownloadFile("${rust_url}", "${rust_dist}")
+
+# Install Rust
+Write-Host "Installing Rust"
+$p = Start-Process -FilePath "${rust_dist}" -ArgumentList `
+("-y", `
+    "--profile minimal") `
+  -Wait -PassThru
+if (${p}.ExitCode -ne 0) {
+  throw "Failed to install Rust"
+}
+$p = Start-Process -FilePath "${HOME}\.cargo\bin\rustup" -ArgumentList `
+("target", `
+    "add", `
+    "${env:RUST_TOOLCHAIN_I686}") `
+  -Wait -PassThru
+if (${p}.ExitCode -ne 0) {
+  throw "Failed to install Rust"
+}
+Write-Host "Rust (${env:RUST_TOOLCHAIN_X86_64}/${env:RUST_DIST_NAME}) installed"
+
 # Download MSYS2
 $msys2_url = "${env:MSYS2_URL}/${env:MSYS2_DIST_NAME}"
 $msys2_dist = "${env:TMP}\${env:MSYS2_DIST_NAME}"
