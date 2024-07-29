@@ -29,6 +29,10 @@ for %%a in ("x86" "x64") do (
   call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %%~a -c release --vs-ver 16
 )
 
+mkdir gtk
+call 7z a %SourcePath%\gtk-win32.7z C:\gtk-build\build\Win32\release\ *
+call 7z a %SourcePath%\gtk-win64.7z C:\gtk-build\build\x64\release\ *
+
 echo "Build done"
 goto :end_local
 
