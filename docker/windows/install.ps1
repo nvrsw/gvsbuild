@@ -64,6 +64,9 @@ if (${p}.ExitCode -ne 0) {
 }
 Write-Host "Rust (${env:RUST_TOOLCHAIN_X86_64}/${env:RUST_DIST_NAME}) installed"
 
+setx /M CARGO "${HOME}\.cargo\bin\cargo.exe"
+setx /M RUSTUP "${HOME}\.cargo\bin\rustup.exe"
+
 # Download MSYS2
 $msys2_url = "${env:MSYS2_URL}/${env:MSYS2_DIST_NAME}"
 $msys2_dist = "${env:TMP}\${env:MSYS2_DIST_NAME}"
