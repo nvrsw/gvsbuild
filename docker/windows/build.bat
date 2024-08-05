@@ -38,9 +38,9 @@ goto :end_local
 
 :usage
 echo Usage:
-echo     %0 [source path]
+echo     %0 [source path] [arch]
 echo Example:
-echo     %0 C:\git\gvsbuild
+echo     %0 C:\git\gvsbuild x86
 goto :end_local
 
 :missing_msvc
