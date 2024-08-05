@@ -91,7 +91,7 @@ Write-Host "Updating MSYS2"
 $p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
 ("-l", `
     "-c", `
-    "'pacman --noconfirm -Sy make gcc diffutils nasm pkg-config git'") `
+    "'pacman --noconfirm -Sy bison coreutils diffutils flex gcc git make nasm patch pkg-config'") `
   -Wait -PassThru
 if (${p}.ExitCode -ne 0) {
   throw "Failed to install MSYS2 build tools"
