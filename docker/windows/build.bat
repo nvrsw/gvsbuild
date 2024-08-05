@@ -18,6 +18,7 @@ if not exist "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" goto missing_file
 if "%1" == "" goto usage
 
 set SourcePath=%1
+set Arch=%2
 
 :build
 
@@ -25,13 +26,15 @@ echo "Build GVSBuild"
 
 chcp 437
 cd %SourcePath%
-for %%a in ("x86" "x64") do (
-  call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %%~a -c release --vs-ver 16
-)
+call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %Arch% -c release --vs-ver 16
 
-mkdir gtk
-call 7z a %SourcePath%\gtk-win32.7z C:\gtk-build\build\Win32\release\ *
-call 7z a %SourcePath%\gtk-win64.7z C:\gtk-build\build\x64\release\ *
+mkdir %SourcePath%\gtk
+if "%Arch%" == "x86" (
+  call 7z a %SourcePath%\gtk\gtk-win32.7z C:\gtk-build\build\Win32\release\ *
+)
+else (
+  call 7z a %SourcePath%\gtk\gtk-win64.7z C:\gtk-build\build\x64\release\ *
+)
 
 echo "Build done"
 goto :end_local
