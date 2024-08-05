@@ -1357,6 +1357,7 @@ class Project_libuv(Tarball, CmakeProject):
         self.install(r'.\LICENSE share\doc\libuv')
         self.install(r'.\_gvsbuild-cmake\uv.dll bin')
         self.install(r'.\_gvsbuild-cmake\uv.lib lib')
+        self.install(r'.\_gvsbuild-cmake\uv_a.lib lib')
 
 @project_add
 class Project_libxml2(Tarball, Meson):
