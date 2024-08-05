@@ -18,16 +18,17 @@ set Arch=%2
 
 echo "Build GVSBuild"
 
-chcp 437
 mkdir %SourcePath%\gtk
 cd %SourcePath%
 
 if "%Arch%" == "x86" (
   call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" x86
+  chcp 437
   call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 16
   call 7z a %SourcePath%\gtk\gtk-win32.7z C:\gtk-build\gtk\Win32\release\*
 ) else (
   call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  chcp 437
   call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 16
   call 7z a %SourcePath%\gtk\gtk-win64.7z C:\gtk-build\gtk\x64\release\*
 )
