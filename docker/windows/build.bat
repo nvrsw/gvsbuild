@@ -38,10 +38,10 @@ call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-
 
 mkdir %SourcePath%\gtk
 if "%Arch%" == "x86" (
-  call 7z a %SourcePath%\gtk\gtk-win32.7z C:\gtk-build\build\Win32\release\ *
+  call 7z a %SourcePath%\gtk\gtk-win32.7z C:\gtk-build\gtk\Win32\release\ *
 )
 else (
-  call 7z a %SourcePath%\gtk\gtk-win64.7z C:\gtk-build\build\x64\release\ *
+  call 7z a %SourcePath%\gtk\gtk-win64.7z C:\gtk-build\gtk\x64\release\ *
 )
 
 echo "Build done"
