@@ -24,6 +24,14 @@ set Arch=%2
 
 echo "Build GVSBuild"
 
+echo "Initialize Visual Studio Environment"
+if "%Arch%" == "x86" (
+  call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" x86
+)
+else (
+  call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" amd64
+)
+
 chcp 437
 cd %SourcePath%
 call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p %Arch% -c release --vs-ver 16
