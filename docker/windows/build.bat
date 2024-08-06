@@ -13,27 +13,27 @@ if not exist "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" goto missing_file
 
 if "%1" == "" goto usage
 
-set SourcePath=%1
+set Source=%1
 set Arch=%2
 
 echo "Build GVSBuild"
 
-mkdir %SourcePath%\gtk
-cd %SourcePath%
+set "MsvcArch=amd64"
+if "%Arch%" == "x86" set "MsvcArch=x86"
+call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" %MsvcArch%
 
-if "%Arch%" == "x86" (
-  call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" x86
-  chcp 437
-  call python build.py build glib -p x86 -c release --vs-ver 16
-  call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 16
-  call 7z a %SourcePath%\gtk\gtk-win32.7z C:\gtk-build\gtk\Win32\release\*
-) else (
-  call "%MSVC_ROOT%\VC\Auxiliary\Build\vcvarsall.bat" amd64
-  chcp 437
-  call python build.py build glib -p x64 -c release --vs-ver 16
-  call python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 16
-  call 7z a %SourcePath%\gtk\gtk-win64.7z C:\gtk-build\gtk\x64\release\*
-)
+chcp 437
+
+call rmdir /S /Q C:\gtk-build\build
+call python %Source%\build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p "%Arch%" -c release --vs-ver 16
+
+set "Output=C:\gtk-build\gtk\x64\release"
+if "%Arch%" == "x86" set "Output=C:\gtk-build\gtk\Win32\release"
+set "Target=%Source%\gtk\gtk-win64.7z"
+if "%Arch%" == "x86" set "Target=%Source%\gtk\gtk-win32.7z"
+
+mkdir %Source%\gtk
+call 7z a %Target% %Output%\*
 
 echo "Build done"
 goto :end_local
