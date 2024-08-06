@@ -91,6 +91,15 @@ Write-Host "Updating MSYS2"
 $p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
 ("-l", `
     "-c", `
+    "'pacman --noconfirm -Sy bison coreutils diffutils flex gcc git make nasm patch pkg-config'") `
+  -Wait -PassThru
+if (${p}.ExitCode -ne 0) {
+  throw "Failed to install MSYS2 build tools"
+}
+
+$p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
+("-l", `
+    "-c", `
     "' '") `
   -Wait -PassThru
 if (${p}.ExitCode -ne 0) {
@@ -119,14 +128,6 @@ $p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
   -Wait -PassThru
 if (${p}.ExitCode -ne 0) {
   throw "Failed to update MSYS2"
-}
-$p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
-("-l", `
-    "-c", `
-    "'pacman --noconfirm -Sy bison coreutils diffutils flex gcc git make nasm patch pkg-config'") `
-  -Wait -PassThru
-if (${p}.ExitCode -ne 0) {
-  throw "Failed to install MSYS2 build tools"
 }
 Write-Host "MSYS2 (${env:MSYS2_DIST_NAME}) installed"
 
