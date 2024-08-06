@@ -16,7 +16,7 @@ if "%1" == "" goto usage
 set Source=%1
 set Arch=%2
 
-echo "Build GVSBuild"
+echo "Build library with '%1 %2'"
 
 set "MsvcArch=amd64"
 if "%Arch%" == "x86" set "MsvcArch=x86"
