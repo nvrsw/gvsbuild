@@ -24,7 +24,6 @@ $p = Start-Process -FilePath "${msvs_dist}" -ArgumentList `
    "--nocache", `
    "--add Microsoft.VisualStudio.Workload.NativeDesktop", `
     "--add Microsoft.VisualStudio.Workload.VCTools", `
-   "--add Microsoft.VisualStudio.Component.Windows10SDK.18362", `
    "--includeRecommended") `
   -Wait -PassThru
 if (${p}.ExitCode -ne 0) {
@@ -91,7 +90,7 @@ Write-Host "Updating MSYS2"
 $p = Start-Process -FilePath "C:\msys64\usr\bin\bash.exe" -ArgumentList `
 ("-l", `
     "-c", `
-    "'pacman --noconfirm -Sy make gcc diffutils nasm pkg-config git'") `
+    "'pacman --noconfirm -Sy make gcc diffutils pkg-config git'") `
   -Wait -PassThru
 if (${p}.ExitCode -ne 0) {
   throw "Failed to install MSYS2 build tools"
