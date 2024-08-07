@@ -53,6 +53,7 @@ docker_build() {
   docker run --rm -t \
     --cpu-count ${NUMBER_OF_PROCESSORS} \
     --cpus ${NUMBER_OF_PROCESSORS} \
+    --memory 16384m \
     -v ${DOCKER_GVSBUILD_SRC_VOL}:${DOCKER_GVSBUILD_SRC_DIR} \
     -v ${DOCKER_GVSBUILD_TOOLS_VOL}:${DOCKER_GVSBUILD_TOOLS_DIR} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
@@ -61,6 +62,7 @@ docker_build() {
   docker run --rm -t \
     --cpu-count ${NUMBER_OF_PROCESSORS} \
     --cpus ${NUMBER_OF_PROCESSORS} \
+    --memory 16384m \
     -v ${DOCKER_GVSBUILD_SRC_VOL}:${DOCKER_GVSBUILD_SRC_DIR} \
     -v ${DOCKER_GVSBUILD_TOOLS_VOL}:${DOCKER_GVSBUILD_TOOLS_DIR} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
@@ -70,6 +72,9 @@ docker_build() {
 docker_console() {
   ECHO "Run console in docker image '${DOCKER_TAG}'"
   winpty docker run --rm -it \
+    --cpu-count ${NUMBER_OF_PROCESSORS} \
+    --cpus ${NUMBER_OF_PROCESSORS} \
+    --memory 16384m \
     --entrypoint cmd \
     -v ${DOCKER_GVSBUILD_SRC_VOL}:${DOCKER_GVSBUILD_SRC_DIR} \
     -v ${DOCKER_GVSBUILD_TOOLS_VOL}:${DOCKER_GVSBUILD_TOOLS_DIR} \
