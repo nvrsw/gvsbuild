@@ -1357,6 +1357,7 @@ class Project_libuv(Tarball, CmakeProject):
         self.install(r'.\LICENSE share\doc\libuv')
         self.install(r'.\_gvsbuild-cmake\uv.dll bin')
         self.install(r'.\_gvsbuild-cmake\uv.lib lib')
+        self.install(r'.\_gvsbuild-cmake\uv_a.lib lib')
 
 @project_add
 class Project_libxml2(Tarball, Meson):
@@ -1888,8 +1889,8 @@ class Project_zlib(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'zlib',
-            archive_url = 'http://www.zlib.net/zlib-1.3.tar.xz',
-            hash = '8a9ba2898e1d0d774eca6ba5b4627a11e5588ba85c8851336eb38de4683050a7',
+            archive_url = 'http://www.zlib.net/zlib-1.3.1.tar.xz',
+            hash = '38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32',
             )
 
     def build(self):
