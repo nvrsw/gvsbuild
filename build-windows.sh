@@ -56,7 +56,7 @@ docker_build() {
     -v ${DOCKER_GVSBUILD_SRC_VOL}:${DOCKER_GVSBUILD_SRC_DIR} \
     -v ${DOCKER_GVSBUILD_TOOLS_VOL}:${DOCKER_GVSBUILD_TOOLS_DIR} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
-    ${DOCKER_TAG} C:\\build.bat ${DOCKER_GVSBUILD_DIR} x86
+    ${DOCKER_TAG} ${DOCKER_GVSBUILD_DIR} x86
 
   docker run --rm -t \
     --cpu-count ${NUMBER_OF_PROCESSORS} \
@@ -64,7 +64,7 @@ docker_build() {
     -v ${DOCKER_GVSBUILD_SRC_VOL}:${DOCKER_GVSBUILD_SRC_DIR} \
     -v ${DOCKER_GVSBUILD_TOOLS_VOL}:${DOCKER_GVSBUILD_TOOLS_DIR} \
     -v ${GVSBUILD_DIR}:${DOCKER_GVSBUILD_DIR} \
-    ${DOCKER_TAG} C:\\build.bat ${DOCKER_GVSBUILD_DIR} x64
+    ${DOCKER_TAG} ${DOCKER_GVSBUILD_DIR} x64
 }
 
 docker_console() {
