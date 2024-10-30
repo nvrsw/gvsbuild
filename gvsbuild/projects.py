@@ -461,14 +461,21 @@ class Project_glib(Tarball, Meson):
             'glib',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.82/glib-2.82.2.tar.xz',
             hash = 'ab45f5a323048b1659ee0fbda5cecd94b099ab3e4b9abf26ae06aeb3e781fd63',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'gettext', 'libffi', 'zlib'],
-            patches = ['glib-package-installation-directory.patch',
-                       'gwin32-remove-automatic-handling-of-AccessViolation-.patch'],
+            dependencies = ['ninja', 'meson', 'pkg-config', 'gettext', 'libffi', 'zlib', 'pcre2'],
+            patches = [
+                '001-glib-package-installation-directory.patch',
+                '0001-gsocket-windows-check-event-before-calling-WSAEnumNe.patch',
+                '0001-gpoll-windows-use-a-threadpool-when-polling-large-nu.patch'],
             )
+        self.add_param("-Dman-pages=disabled")
+        self.add_param("-Dtests=false")
+        self.add_param("-Ddocumentation=false")
+        self.add_param("-Dintrospection=disabled")
+        self.add_param("-Dsysprof=disabled")
 
     def build(self):
-        Meson.build(self, meson_params='-Dinternal_pcre=true')
-        self.install(r'.\COPYING share\doc\glib')
+        Meson.build(self)
+        self.install(r".\LICENSES\* share\doc\glib")
 
 @project_add
 class Project_pcre2(Tarball, Meson):
