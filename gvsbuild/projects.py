@@ -471,6 +471,21 @@ class Project_glib(Tarball, Meson):
         self.install(r'.\COPYING share\doc\glib')
 
 @project_add
+class Project_pcre2(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(self,
+            'pcre2',
+            archive_url='https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.44/pcre2-10.44.tar.gz',
+            hash='86b9cb0aa3bcb7994faa88018292bc704cdbb708e785f7c74352ff6ea7d3175b',
+            dependencies=['ninja', 'meson', 'pkg-config'],
+            patches = [],
+        )
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\pcre2")
+
+@project_add
 class Project_glib_networking(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
