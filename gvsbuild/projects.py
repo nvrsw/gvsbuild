@@ -769,24 +769,30 @@ class Project_gtk(Project_gtk_base):
     def __init__(self):
         Project.__init__(self,
             'gtk',
-            archive_url = 'https://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.32.tar.xz',
-            hash = 'b6c8a93ddda5eabe3bfee1eb39636c9a03d2a56c7b62828b359bf197943c582e',
-            dependencies = ['atk', 'gdk-pixbuf', 'pango'],
-            patches = ['gtk-revert-scrolldc-commit.patch', 'gtk-bgimg.patch', 'gtk-accel.patch',
-                       # https://github.com/hexchat/hexchat/issues/1007
-                       'gtk-multimonitor.patch',
-                       # These two will be in 2.24.33
-                       'bfdac2f70e005b2504cc3f4ebbdab328974d005a.patch', '61162225f712df648f38fd12bc0817cfa9f79a64.patch',
-                       # https://github.com/hexchat/hexchat/issues/2077
-                       '0001-GDK-W32-Remove-WS_EX_LAYERED-from-an-opaque-window.patch',
-                       'gtk-duplicate-marshal-defines.patch',
-                       ],
+            archive_url = 'https://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.33.tar.xz',
+            hash="ac2ac757f5942d318a311a54b0c80b5ef295f299c2a73c632f6bfb1ff49cc6da",
+            dependencies=["atk", "gdk-pixbuf", "pango"],
+            patches=[
+                "gtk-revert-scrolldc-commit.patch",
+                "gtk-bgimg.patch",
+                "gtk-accel.patch",
+                # https://github.com/hexchat/hexchat/issues/1007
+                "gtk-multimonitor.patch",
+                # https://github.com/hexchat/hexchat/issues/2077
+                "0001-GDK-W32-Remove-WS_EX_LAYERED-from-an-opaque-window.patch",
+            ],
             )
         if Project.opts.enable_gi:
             self.add_dependency('gobject-introspection')
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
         self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         self.exec_msbuild_gen(r'build\win32', 'gtk+.sln', add_pars='/p:UseEnv=True')
 
         self.make_all_mo()
