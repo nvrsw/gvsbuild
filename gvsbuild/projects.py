@@ -357,19 +357,42 @@ class Gperf(GitRepo, Meson):
         self.install(r"COPYING share\doc\gperf")
 
 @project_add
-class Project_freetype(Tarball, CmakeProject):
+class Freetype(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'freetype',
-            archive_url = 'http://git.savannah.gnu.org/cgit/freetype/freetype2.git/snapshot/freetype2-098dd70cb1845b8c325ef4801c5f2e09e476b1ed.tar.gz',
-            hash = 'c891891164a716acbcf7137585c2ef1bc27599d2815b3c099a31d6a5a2e67a72',
-            dependencies = ['pkg-config', 'ninja', 'libpng'],
-            )
+        Project.__init__(
+            self,
+            "freetype",
+            archive_url="https://gitlab.freedesktop.org/freetype/freetype/-/archive/VER-2-13-3/freetype-VER-2-13-3.tar.gz",
+            hash="bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103",
+            dependencies=["pkgconf", "ninja", "libpng"],
+            patches=["0001-meson-in-shared-libraries-we-need-to-export-the-meth.patch"],
+        )
 
     def build(self):
-        CmakeProject.build(self, cmake_params='-DWITH_ZLIB=ON -DWITH_PNG=ON -DDISABLE_FORCE_DEBUG_POSTFIX=ON -DBUILD_SHARED_LIBS=ON', use_ninja=True)
-        self.install_pc_files()
-        self.install(r'.\docs\LICENSE.TXT share\doc\freetype')
+        Meson.build(self)
+        self.install(r".\docs\LICENSE.TXT share\doc\freetype")
+
+@project_add
+class PkgConf(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "pkgconf",
+            archive_url="https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.gz",
+            hash="a2df680578e85f609f2fa67bd3d0fc0dc71b4bf084fc49119de84cd6ed28e723",
+            dependencies=["ninja", "meson"],
+            patches=["0001-libpkgconf-add-defines-to-unbreak-build-with-VS2013.patch"],
+        )
+        self.add_param("-Dtests=disabled")
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\pkgconf")
+
+    def post_install(self):
+        self.exec_cmd(
+            r"copy %(gtk_dir)s\bin\pkgconf.exe %(gtk_dir)s\bin\pkg-config.exe"
+        )
 
 @project_add
 class Project_fribidi(GitRepo, Meson):
