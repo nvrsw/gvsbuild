@@ -65,7 +65,7 @@ class Project_atk(Tarball, Meson):
             dependencies = [
                 'ninja',
                 'meson',
-                'pkg-config',
+                'pkgconf',
                 'glib',
             ],
             )
@@ -190,7 +190,7 @@ class Project_dcv_color_primitives(Tarball, Meson):
             archive_url = 'https://github.com/aws/dcv-color-primitives/archive/v0.1.8.tar.gz',
             archive_file_name = 'dcv-color-primitives-0.1.8.tar.gz',
             hash = '467277ba9484c3d1ff9e7eeb7e4cea04c28526a0229f6bbeda4f472d08a5e7ca',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'cargo'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'cargo'],
             )
 
     def build(self):
@@ -206,7 +206,7 @@ class Project_emeus(GitRepo, Meson):
             repo_url = 'https://github.com/ebassi/emeus.git',
             fetch_submodules = False,
             tag = None,
-            dependencies = ['ninja', 'meson', 'pkg-config', 'gtk3'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'gtk3'],
             patches = [
                 '00_win_no_script.patch'
                 ],
@@ -284,7 +284,7 @@ class Project_ffmpeg(Tarball, Project):
             'ffmpeg',
             archive_url = 'https://www.ffmpeg.org/releases/ffmpeg-4.2.2.tar.xz',
             hash = 'cb754255ab0ee2ea5f66f8850e1bd6ad5cac1cd855d0a2f4990fb8c668b0d29c',
-            dependencies = [ 'nasm', 'msys2', 'pkg-config', 'nv-codec-headers' ],
+            dependencies = [ 'nasm', 'msys2', 'pkgconf', 'nv-codec-headers' ],
         )
         if self.opts.ffmpeg_enable_gpl:
             self.add_dependency('x264')
@@ -418,7 +418,7 @@ class Project_gdk_pixbuf(Tarball, Meson):
             hash = '1582595099537ca8ff3b99c6804350b4c058bb8ad67411bbaae024ee7cead4e6',
             dependencies = [
                 'ninja',
-                'pkg-config',
+                'pkgconf',
                 'meson',
                 'python',
                 'libtiff-4',
@@ -482,7 +482,7 @@ class Project_glib(Tarball, Meson):
             'glib',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.82/glib-2.82.2.tar.xz',
             hash = 'ab45f5a323048b1659ee0fbda5cecd94b099ab3e4b9abf26ae06aeb3e781fd63',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'gettext', 'libffi', 'zlib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'gettext', 'libffi', 'zlib'],
             patches = [
                 '001-glib-package-installation-directory.patch',
                 '0001-gsocket-windows-check-event-before-calling-WSAEnumNe.patch',
@@ -505,7 +505,7 @@ class Project_glib_networking(Tarball, Meson):
             'glib-networking',
             archive_url = 'https://ftp.acc.umu.se/pub/gnome/sources/glib-networking/2.64/glib-networking-2.64.1.tar.xz',
             hash = 'a4c346def7d817467d79a95c23b3ccf22e4df1548870726b63396400852daf72',
-            dependencies = ['pkg-config', 'ninja', 'meson', 'glib', 'openssl'],
+            dependencies = ['pkgconf', 'ninja', 'meson', 'glib', 'openssl'],
             )
 
     def build(self):
@@ -532,7 +532,7 @@ class Project_glib_openssl(Tarball, Meson):
             'glib-openssl',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib-openssl/2.50/glib-openssl-2.50.8.tar.xz',
             hash = '869f08e4e9a719c1df411c2fb5554400f6b24a9db0cb94c4359db8dad18d185f',
-            dependencies = ['pkg-config', 'ninja', 'meson', 'glib', 'openssl'],
+            dependencies = ['pkgconf', 'ninja', 'meson', 'glib', 'openssl'],
             )
 
     def build(self):
@@ -551,7 +551,7 @@ class Project_gobject_introspection(Tarball, Meson):
                 'ninja',
                 'meson',
                 'msys2',
-                'pkg-config',
+                'pkgconf',
                 'glib',
                 ],
             )
@@ -579,7 +579,7 @@ class Project_graphene(GitRepo, Meson):
             repo_url = 'https://github.com/ebassi/graphene',
             fetch_submodules = False,
             tag = None,
-            dependencies = ['ninja', 'meson', 'pkg-config', 'glib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'glib'],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -626,7 +626,7 @@ class Project_gsettings_desktop_schemas(Tarball, Meson):
             'gsettings-desktop-schemas',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.36/gsettings-desktop-schemas-3.36.0.tar.xz',
             hash = '764ab683286536324533a58d4e95fc57f81adaba7d880dd0ebbbced63e960ea6',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'python', 'glib'],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'python', 'glib'],
             patches = [
                 '0003-source-for-dll-in-windows.patch',
                 ],
@@ -952,7 +952,7 @@ class Project_harfbuzz(Tarball, Meson):
             'harfbuzz',
             archive_url = 'https://github.com/harfbuzz/harfbuzz/releases/download/10.1.0/harfbuzz-10.1.0.tar.xz',
             hash = '6ce3520f2d089a33cef0fc48321334b8e0b72141f6a763719aaaecd2779ecb82',
-            dependencies = ['python', 'freetype', 'pkg-config', 'glib'],
+            dependencies = ['python', 'freetype', 'pkgconf', 'glib'],
             )
 
         if Project.opts.enable_gi:
@@ -1055,7 +1055,7 @@ class Project_json_glib(Tarball, Meson):
             'json-glib',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/json-glib/1.4/json-glib-1.4.4.tar.xz',
             hash = '720c5f4379513dc11fd97dc75336eb0c0d3338c53128044d9fabec4374f4bc47',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'python', 'glib'],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'python', 'glib'],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -1161,7 +1161,7 @@ class Project_libgxps(Tarball, Meson):
             'libgxps',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libgxps/0.3/libgxps-0.3.1.tar.xz',
             hash = '1a939fc8fcea9471b7eca46b1ac90cff89a30d26f65c7c9a375a4bf91223fa94',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'glib', 'libarchive', 'cairo', 'libpng', 'libjpeg-turbo', 'libtiff-4', 'gtk3', ],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'glib', 'libarchive', 'cairo', 'libpng', 'libjpeg-turbo', 'libtiff-4', 'gtk3', ],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -1253,7 +1253,7 @@ class Project_libpsl(GitRepo, Meson):
             repo_url = 'https://github.com/rockdaboot/libpsl.git',
             fetch_submodules = True,
             tag = 'b32e81367ce91388e94bd34c54e7297063857d66',
-            dependencies = ['python', 'meson', 'ninja', 'pkg-config', 'icu', ],
+            dependencies = ['python', 'meson', 'ninja', 'pkgconf', 'icu', ],
             )
 
         self.add_param('-Druntime=libicu')
@@ -1722,29 +1722,6 @@ class Project_pixman(Tarball, Project):
         self.install(r'.\COPYING share\doc\pixman')
 
 @project_add
-class Project_pkgconf(GitRepo, Meson):
-    def __init__(self):
-        GitRepo.__init__(self)
-        Project.__init__(self,
-            'pkg-config',
-            prj_dir = 'pkgconf',
-            repo_url = 'https://github.com/pkgconf/pkgconf.git',
-            fetch_submodules = False,
-            tag = 'pkgconf-1.5.4',
-            dependencies = ['ninja', 'meson'],
-            patches = [ '0001-vs2013.patch',
-                      ],
-            )
-        self.add_param('-Dtests=false')
-
-    def build(self):
-        Meson.build(self)
-        self.install(r'.\COPYING share\doc\pkgconf')
-
-    def post_install(self):
-        self.exec_cmd(r'copy %(gtk_dir)s\bin\pkgconf.exe %(gtk_dir)s\bin\pkg-config.exe')
-
-@project_add
 class Project_portaudio(Tarball, CmakeProject):
     def __init__(self):
         Project.__init__(self,
@@ -1911,7 +1888,7 @@ class Project_wing(Tarball, Meson):
             'wing',
             archive_url = 'https://gitlab.gnome.org/GNOME/wing/-/archive/v0.3.4/wing-v0.3.4.tar.gz',
             hash = '7eb01cbfa33988349514963d669f1a86f4bf0a2afff0f8eabf10292f3de7ef8a',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'glib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'glib'],
             )
 
     def build(self):
@@ -1974,7 +1951,7 @@ class Project_check_libs(NullExpander, Meson):
                     # Used to build the various tests
                     'meson',
                     'ninja',
-                    'pkg-config',
+                    'pkgconf',
                     # libraries to test, hopefully all the one we build!
                     'atk',
                     'cairo',
