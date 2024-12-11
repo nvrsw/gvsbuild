@@ -326,7 +326,9 @@ class Project_fontconfig(Tarball, Project):
                 content = f.read()
             if content.find('<PlatformToolset>FIXME</PlatformToolset>') >= 0:
                 log.debug('patching project file %s' % (proj,))
-                if self.builder.opts.vs_ver == '16':
+                if self.builder.opts.vs_ver == '17':
+                    fixme = r'143'
+                elif self.builder.opts.vs_ver == '16':
                     fixme = r'142'
                 elif self.builder.opts.vs_ver == '15':
                     fixme = r'141'
@@ -807,6 +809,13 @@ class Project_gtk3_20(Project_gtk_base):
             self.add_dependency('gobject-introspection')
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         self.exec_msbuild_gen(r'build\win32', 'gtk+.sln',  add_pars='/p:GtkPostInstall=rem')
 
         self.make_all_mo()
@@ -837,6 +846,13 @@ class Project_gtk3_22(Project_gtk_base):
             self.add_dependency('gobject-introspection')
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         self.exec_msbuild_gen(r'build\win32', 'gtk+.sln',  add_pars='/p:GtkPostInstall=rem')
 
         self.make_all_mo()
@@ -875,6 +891,13 @@ class Project_gtk3_24(Tarball, Meson):
         self.add_param('-Dintrospection=%s' % (enable_gi, ))
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         Meson.build(self, meson_params='-Dtests=false -Ddemos=false -Dexamples=false')
 
         self.install(r'.\COPYING share\doc\gtk3')
