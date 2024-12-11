@@ -395,19 +395,19 @@ class PkgConf(Tarball, Meson):
         )
 
 @project_add
-class Project_fribidi(GitRepo, Meson):
+class Fribidi(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'fribidi',
-            repo_url = 'https://github.com/fribidi/fribidi.git',
-            fetch_submodules = False,
-            tag = 'f2c9d50722cb60d0cdec3b1bafba9029770e86b4',
-            dependencies = ['ninja', 'meson'],
-            )
+        Project.__init__(
+            self,
+            "fribidi",
+            archive_url="https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz",
+            hash="1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c",
+            dependencies=["ninja", "meson"],
+        )
 
     def build(self):
-        Meson.build(self, meson_params='-Ddocs=false')
-        self.install(r'.\COPYING share\doc\fribidi')
+        Meson.build(self, meson_params="-Ddocs=false")
+        self.install(r".\COPYING share\doc\fribidi")
 
 @project_add
 class Project_gdk_pixbuf(Tarball, Meson):
