@@ -927,20 +927,27 @@ class Project_gtksourceview3(Tarball, Project, _MakeGir):
             self.make_single_gir('gtksourceview', prj_dir='gtksourceview3')
 
 @project_add
-class Project_harfbuzz(Tarball, CmakeProject):
+class Project_harfbuzz(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'harfbuzz',
-            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.4.tar.xz',
-            hash = '9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12',
+            archive_url = 'https://github.com/harfbuzz/harfbuzz/releases/download/10.1.0/harfbuzz-10.1.0.tar.xz',
+            hash = '6ce3520f2d089a33cef0fc48321334b8e0b72141f6a763719aaaecd2779ecb82',
             dependencies = ['python', 'freetype', 'pkg-config', 'glib'],
             )
 
-    def build(self):
-        CmakeProject.build(self, cmake_params='-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_GOBJECT=ON', use_ninja=True)
+        if Project.opts.enable_gi:
+            self.add_dependency("gobject-introspection")
+            self.add_param("-Dintrospection=enabled")
+        else:
+            self.add_param("-Dintrospection=disabled")
 
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\harfbuzz')
+        self.add_param("-Ddirectwrite=enabled")
+        self.add_param("-Dgdi=enabled")
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\harfbuzz")
 
 @project_add
 class Project_hicolor_icon_theme(Tarball, Project):
@@ -1643,8 +1650,8 @@ class Project_pango(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'pango',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.44/pango-1.44.7.tar.xz',
-            hash = '66a5b6cc13db73efed67b8e933584509f8ddb7b10a8a40c3850ca4a985ea1b1f',
+            archive_url = 'https://download.gnome.org/sources/pango//1.55/pango-1.55.0.tar.xz',
+            hash = 'a2c17a8dc459a7267b8b167bb149d23ff473b6ff9d5972bee047807ee2220ccf',
             dependencies = [
                 'ninja',
                 'meson',
@@ -1652,25 +1659,20 @@ class Project_pango(Tarball, Meson):
                 'harfbuzz',
                 'fribidi',
             ],
-            patches = [
-                '001-ignore-help2man.patch',
-                '002-win32-load-aliases.patch',
-                '003-win32-font-corruption.patch',
-                '004-win32-thread-corruption.patch',
-                '005-win32-pango-aliases.patch',
-            ],
+            patches = [],
             )
         if self.opts.enable_gi:
-            self.add_dependency('gobject-introspection')
-            enable_gi = 'true'
+            self.add_dependency("gobject-introspection")
+            enable_gi = "enabled"
         else:
-            enable_gi = 'false'
+            enable_gi = "disabled"
 
-        self.add_param('-Dintrospection=%s' % (enable_gi, ))
+        self.add_param(f"-Dintrospection={enable_gi}")
+        self.add_param("-Dfreetype=enabled")
 
     def build(self):
         Meson.build(self)
-        self.install(r'COPYING share\doc\pango')
+        self.install(r"COPYING share\doc\pango")
 
 @project_add
 class Project_pixman(Tarball, Project):
