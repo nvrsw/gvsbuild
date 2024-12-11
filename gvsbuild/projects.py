@@ -309,56 +309,52 @@ class Project_ffmpeg(Tarball, Project):
         self.builder.exec_msys(['mv', 'swscale.lib', '../lib/'], working_dir=os.path.join(self.builder.gtk_dir, 'bin'))
 
 @project_add
-class Project_fontconfig(Tarball, Project):
+class Project_fontconfig(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'fontconfig',
-            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.0.tar.gz',
-            hash = 'a6ca290637d8b2c4e1dd40549b179202977593f7481ec83ddfb1765ad90037ba',
-            dependencies = ['freetype', 'libxml2'],
-            patches = ['fontconfig.patch'],
+            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.gz',
+            hash = 'f5f359d6332861bd497570848fcb42520964a9e83d5e3abe397b6b6db9bcaaf4',
+            dependencies = ['freetype', 'gperf', 'expat'],
+            patches = [],
             )
 
     def build(self):
-        #make the fontconfig files work on other compatible vs versions
-        for proj in glob.glob(r'%s\*.vcxproj' % (self.build_dir,)):
-            with open(proj, 'r') as f:
-                content = f.read()
-            if content.find('<PlatformToolset>FIXME</PlatformToolset>') >= 0:
-                log.debug('patching project file %s' % (proj,))
-                if self.builder.opts.vs_ver == '17':
-                    fixme = r'143'
-                elif self.builder.opts.vs_ver == '16':
-                    fixme = r'142'
-                elif self.builder.opts.vs_ver == '15':
-                    fixme = r'141'
-                else:
-                    fixme = self.builder.opts.vs_ver + r'0'
-                content = content.replace('<PlatformToolset>FIXME</PlatformToolset>', '<PlatformToolset>v%s</PlatformToolset>' % (fixme))
-                with open(proj, 'w') as f:
-                    f.write(content)
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\fontconfig")
 
-        self.exec_msbuild('fontconfig.sln /t:build')
+@project_add
+class Expat(Tarball, CmakeProject):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "expat",
+            repository="libexpat",
+            archive_url="https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.xz",
+            hash="a695629dae047055b37d50a0ff4776d1d45d0a4c842cf4ccee158441f55ff7ee",
+            dependencies=["cmake", "ninja"],
+            patches=["0001-CMakeLists-do-not-add-postfix-d-in-debug-builds.patch"],
+        )
 
-        if self.builder.x86:
-            rel_dir = r'.\%(configuration)s'
-        else:
-            rel_dir = r'.\x64\%(configuration)s'
+    def build(self):
+        CmakeProject.build(self, use_ninja=True)
+        self.install(r".\COPYING share\doc\expat")
 
-        self.push_location(rel_dir)
-        self.install('fontconfig.dll', 'fontconfig.pdb', 'fc-cache.exe', 'fc-cache.pdb', 'fc-cat.exe', 'fc-cat.pdb', 'fc-list.exe', 'fc-list.pdb',
-                     'fc-match.exe', 'fc-match.pdb', 'fc-query.exe', 'fc-query.pdb', 'fc-scan.exe', 'fc-scan.pdb', 'bin')
-        self.pop_location()
+@project_add
+class Gperf(GitRepo, Meson):
+    def __init__(self):
+        Meson.__init__(
+            self,
+            "gperf",
+            repo_url="https://gitlab.freedesktop.org/tpm/gperf.git",
+            fetch_submodules=False,
+            tag="c24359b4eab86d71c655c3b3fc969f13aac879ce",
+            dependencies=["ninja"],
+        )
 
-        self.install(r'fonts.conf fonts.dtd etc\fonts')
-        self.install(r'.\fontconfig\fcfreetype.h .\fontconfig\fcprivate.h .\fontconfig\fontconfig.h include\fontconfig')
-
-        self.push_location(rel_dir)
-        self.install('fontconfig.lib', 'lib')
-        self.pop_location()
-
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\fontconfig')
+    def build(self):
+        Meson.build(self)
+        self.install(r"COPYING share\doc\gperf")
 
 @project_add
 class Project_freetype(Tarball, CmakeProject):
