@@ -135,30 +135,45 @@ class Project_cogl(Tarball, Project):
         self.install(r'.\COPYING share\doc\cogl')
 
 @project_add
-class Project_cyrus_sasl(Tarball, Project):
+class CyrusSasl(Tarball, Project):
     def __init__(self):
-        Project.__init__(self,
-            'cyrus-sasl',
-            hash = '9e8035c12d419209ea60584d5efa51d042c3ed44b450b9d173d5504b222df9f1',
-            archive_url = 'https://github.com/wingtk/cyrus-sasl/releases/download/cyrus-sasl-lmdb-2.1.28/cyrus-sasl-2.1.28.tar.xz',
-            dependencies = ['lmdb', 'openssl', 'mit-kerberos'],
-            patches = ['0001-fix-snprintf-macro.patch',
-                       '0001-Add-MIT-Kerberos-as-GSSAPI-provider.patch',
-                       '0002-Provide-a-compile-option-for-32-64-gssapi.patch',
-                       '0001-Fix-openssl-libs-to-point-to-the-new-openssl-1.1.1-n.patch'],
-            )
+        Project.__init__(
+            self,
+            "cyrus-sasl",
+            hash="9e8035c12d419209ea60584d5efa51d042c3ed44b450b9d173d5504b222df9f1",
+            archive_url="https://github.com/wingtk/cyrus-sasl/releases/download/cyrus-sasl-lmdb-2.1.28/cyrus-sasl-2.1.28.tar.xz",
+            dependencies=["lmdb", "openssl", "mit-kerberos"],
+            patches=[
+                "0001-fix-snprintf-macro.patch",
+                "0001-Add-MIT-Kerberos-as-GSSAPI-provider.patch",
+                "0002-Provide-a-compile-option-for-32-64-gssapi.patch",
+                "0001-Fix-openssl-libs-to-point-to-the-new-openssl-1.1.1-n.patch",
+            ],
+        )
 
     def build(self):
-        configuration = 'Debug' if self.builder.opts.configuration == 'debug' else 'Release'
-        gssapilib = 'gssapi32.lib' if self.builder.x86 else 'gssapi64.lib'
-        self.exec_vs(r'nmake /nologo /f NTMakefile SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\include" LMDB_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'GSSAPI="MITKerberos" GSSAPILIB="' + gssapilib + '" GSSAPI_INCLUDE="%(gtk_dir)s\include" GSSAPI_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'OPENSSL_INCLUDE="%(gtk_dir)s\include" OPENSSL_LIBPATH="%(gtk_dir)s\lib" prefix="%(pkg_dir)s" CFG=' + configuration)
-        self.exec_vs(r'nmake /nologo /f NTMakefile install SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\include" ' +
-                     r'GSSAPI="MITKerberos" GSSAPILIB="' + gssapilib + '" GSSAPI_INCLUDE="%(gtk_dir)s\include" GSSAPI_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'LMDB_LIBPATH="%(gtk_dir)s\lib" OPENSSL_INCLUDE="%(gtk_dir)s\include" OPENSSL_LIBPATH="%(gtk_dir)s\lib" prefix="%(pkg_dir)s" CFG=' + configuration)
+        configuration = (
+            "Debug" if self.builder.opts.configuration == "debug" else "Release"
+        )
+        gssapilib = "gssapi32.lib" if self.builder.x86 else "gssapi64.lib"
+        self.exec_vs(
+            r'nmake /nologo /f NTMakefile SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\\include" LMDB_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'GSSAPI="MITKerberos" GSSAPILIB="'
+            + gssapilib
+            + r'" GSSAPI_INCLUDE="%(gtk_dir)s\\include" GSSAPI_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'OPENSSL_INCLUDE="%(gtk_dir)s\\include" OPENSSL_LIBPATH="%(gtk_dir)s\\lib" prefix="%(pkg_dir)s" CFG='
+            + configuration
+        )
+        self.exec_vs(
+            r'nmake /nologo /f NTMakefile install SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\\include" '
+            + r'GSSAPI="MITKerberos" GSSAPILIB="'
+            + gssapilib
+            + r'" GSSAPI_INCLUDE="%(gtk_dir)s\\include" GSSAPI_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'LMDB_LIBPATH="%(gtk_dir)s\\lib" OPENSSL_INCLUDE="%(gtk_dir)s\\include" OPENSSL_LIBPATH="%(gtk_dir)s\\lib" prefix="%(pkg_dir)s" CFG='
+            + configuration
+        )
 
-        self.install(r'.\COPYING share\doc\cyrus-sasl')
+        self.install(r".\COPYING share\doc\cyrus-sasl")
         self.install_pc_files()
 
 
@@ -222,7 +237,7 @@ class Project_enchant(Tarball, Project):
         self.push_location(r'.\src')
 
         #Exec nmake /nologo -f makefile.mak clean
-        self.exec_vs(r'nmake /nologo -f makefile.mak DLL=1 ' + x64_param + ' MFLAGS=-MD GLIBDIR=%(gtk_dir)s\include\glib-2.0')
+        self.exec_vs(r'nmake /nologo -f makefile.mak DLL=1 ' + x64_param + ' MFLAGS=-MD GLIBDIR=%(gtk_dir)s\\include\\glib-2.0')
 
         self.pop_location()
 
@@ -1305,7 +1320,7 @@ class Project_librsvg(Tarball, Project, _MakeGir):
 
     def build(self):
         self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
-        self.builder.mod_env('INCLUDE', '%s\\lib\glib-2.0\include' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
 
         self.push_location('win32')
         self.exec_vs(r'nmake install -f Makefile.vc CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PREFIX="%(gtk_dir)s"')
@@ -1518,9 +1533,9 @@ class Project_lmdb(GitRepo, Meson):
             )
 
     def build(self):
-        self.push_location(r'.\libraries\liblmdb')
+        self.push_location(r'.\\libraries\\liblmdb')
         Meson.build(self)
-        self.install('LICENSE share\doc\lmdb')
+        self.install('LICENSE share\\doc\\lmdb')
         self.pop_location()
 
 @project_add
@@ -1698,12 +1713,13 @@ class Project_orc(Tarball, Meson):
         self.install(r'COPYING share\doc\orc')
 
 @project_add
-class Project_pango(Tarball, Meson):
+class Project_pango(GitRepo, Meson):
     def __init__(self):
         Project.__init__(self,
             'pango',
-            archive_url = 'https://download.gnome.org/sources/pango//1.54/pango-1.54.0.tar.xz',
-            hash = '8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8',
+            repo_url = 'https://github.com/GNOME/pango.git',
+            fetch_submodules = False,
+            tag = 'efd90cad0b1eeffe1c4d7f71cc0ee8986cc24e4c',
             dependencies = [
                 'ninja',
                 'meson',
