@@ -65,7 +65,7 @@ class Project_atk(Tarball, Meson):
             dependencies = [
                 'ninja',
                 'meson',
-                'pkg-config',
+                'pkgconf',
                 'glib',
             ],
             )
@@ -80,44 +80,24 @@ class Project_atk(Tarball, Meson):
         self.install(r'.\COPYING share\doc\atk')
 
 @project_add
-class Project_cairo(Tarball, Project):
+class Cairo(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'cairo',
-            archive_url = 'https://cairographics.org/snapshots/cairo-1.17.2.tar.xz',
-            hash = '6b70d4655e2a47a22b101c666f4b29ba746eda4aa8a0f7255b32b2e9408801df',
-            dependencies = ['fontconfig', 'glib', 'pixman', 'libpng'],
-            patches = ['001-win32-font-corruption.patch'],
-            )
+        Meson.__init__(
+            self,
+            "cairo",
+            archive_url="https://gitlab.freedesktop.org/cairo/cairo/-/archive/1.18.2/cairo-1.18.2.tar.gz",
+            hash="7bbfb469b89b1f60584b4f39a1366789b7625a5796905870e108b6c0e8ca8216",
+            dependencies=["fontconfig", "freetype", "glib", "pixman", "libpng"],
+            patches=["0001-fix-alloca-unresolved.patch"],
+        )
+        self.add_param("-Ddwrite=enabled")
+        self.add_param("-Dfreetype=enabled")
 
     def build(self):
-        self.exec_vs(r'make -f Makefile.win32 CFG=%(configuration)s ARCH=%(platform)s', add_path=os.path.join(self.builder.opts.msys_dir, 'usr', 'bin'))
-        self.push_location(r'.\util\cairo-gobject')
-        self.exec_vs(r'make -f Makefile.win32 CFG=%(configuration)s ARCH=%(platform)s', add_path=os.path.join(self.builder.opts.msys_dir, 'usr', 'bin'))
-        self.pop_location()
-
-        self.install(r'.\src\%(configuration)s\cairo.dll bin')
-        self.install(r'.\util\cairo-gobject\%(configuration)s\cairo-gobject.dll bin')
-
-        self.install(r'.\src\%(configuration)s\cairo.lib lib')
-        self.install(r'.\util\cairo-gobject\%(configuration)s\cairo-gobject.lib lib')
-
-        self.install(r'.\src\cairo.h include\cairo')
-        self.install(r'.\src\cairo-deprecated.h include\cairo')
-        self.install(r'.\src\cairo-pdf.h include\cairo')
-        self.install(r'.\src\cairo-ps.h include\cairo')
-        self.install(r'.\src\cairo-script.h include\cairo')
-        self.install(r'.\src\cairo-svg.h include\cairo')
-        self.install(r'.\src\cairo-tee.h include\cairo')
-        self.install(r'.\src\cairo-win32.h include\cairo')
-        self.install(r'.\src\cairo-xml.h include\cairo')
-        self.install(r'.\src\cairo-ft.h include\cairo')
-        self.install(r'.\src\cairo-features.h include\cairo')
-        self.install(r'.\util\cairo-gobject\cairo-gobject.h include\cairo')
-        self.install(r'.\cairo-version.h include\cairo')
-
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\cairo')
+        cairo_inc = os.path.join(self.builder.gtk_dir, 'include', 'cairo')
+        self.builder.mod_env('INCLUDE', cairo_inc)
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\cairo")
 
 @project_add
 class Project_clutter(Tarball, Project):
@@ -155,30 +135,45 @@ class Project_cogl(Tarball, Project):
         self.install(r'.\COPYING share\doc\cogl')
 
 @project_add
-class Project_cyrus_sasl(Tarball, Project):
+class CyrusSasl(Tarball, Project):
     def __init__(self):
-        Project.__init__(self,
-            'cyrus-sasl',
-            hash = '9e8035c12d419209ea60584d5efa51d042c3ed44b450b9d173d5504b222df9f1',
-            archive_url = 'https://github.com/wingtk/cyrus-sasl/releases/download/cyrus-sasl-lmdb-2.1.28/cyrus-sasl-2.1.28.tar.xz',
-            dependencies = ['lmdb', 'openssl', 'mit-kerberos'],
-            patches = ['0001-fix-snprintf-macro.patch',
-                       '0001-Add-MIT-Kerberos-as-GSSAPI-provider.patch',
-                       '0002-Provide-a-compile-option-for-32-64-gssapi.patch',
-                       '0001-Fix-openssl-libs-to-point-to-the-new-openssl-1.1.1-n.patch'],
-            )
+        Project.__init__(
+            self,
+            "cyrus-sasl",
+            hash="9e8035c12d419209ea60584d5efa51d042c3ed44b450b9d173d5504b222df9f1",
+            archive_url="https://github.com/wingtk/cyrus-sasl/releases/download/cyrus-sasl-lmdb-2.1.28/cyrus-sasl-2.1.28.tar.xz",
+            dependencies=["lmdb", "openssl", "mit-kerberos"],
+            patches=[
+                "0001-fix-snprintf-macro.patch",
+                "0001-Add-MIT-Kerberos-as-GSSAPI-provider.patch",
+                "0002-Provide-a-compile-option-for-32-64-gssapi.patch",
+                "0001-Fix-openssl-libs-to-point-to-the-new-openssl-1.1.1-n.patch",
+            ],
+        )
 
     def build(self):
-        configuration = 'Debug' if self.builder.opts.configuration == 'debug' else 'Release'
-        gssapilib = 'gssapi32.lib' if self.builder.x86 else 'gssapi64.lib'
-        self.exec_vs(r'nmake /nologo /f NTMakefile SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\include" LMDB_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'GSSAPI="MITKerberos" GSSAPILIB="' + gssapilib + '" GSSAPI_INCLUDE="%(gtk_dir)s\include" GSSAPI_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'OPENSSL_INCLUDE="%(gtk_dir)s\include" OPENSSL_LIBPATH="%(gtk_dir)s\lib" prefix="%(pkg_dir)s" CFG=' + configuration)
-        self.exec_vs(r'nmake /nologo /f NTMakefile install SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\include" ' +
-                     r'GSSAPI="MITKerberos" GSSAPILIB="' + gssapilib + '" GSSAPI_INCLUDE="%(gtk_dir)s\include" GSSAPI_LIBPATH="%(gtk_dir)s\lib" ' +
-                     r'LMDB_LIBPATH="%(gtk_dir)s\lib" OPENSSL_INCLUDE="%(gtk_dir)s\include" OPENSSL_LIBPATH="%(gtk_dir)s\lib" prefix="%(pkg_dir)s" CFG=' + configuration)
+        configuration = (
+            "Debug" if self.builder.opts.configuration == "debug" else "Release"
+        )
+        gssapilib = "gssapi32.lib" if self.builder.x86 else "gssapi64.lib"
+        self.exec_vs(
+            r'nmake /nologo /f NTMakefile SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\\include" LMDB_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'GSSAPI="MITKerberos" GSSAPILIB="'
+            + gssapilib
+            + r'" GSSAPI_INCLUDE="%(gtk_dir)s\\include" GSSAPI_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'OPENSSL_INCLUDE="%(gtk_dir)s\\include" OPENSSL_LIBPATH="%(gtk_dir)s\\lib" prefix="%(pkg_dir)s" CFG='
+            + configuration
+        )
+        self.exec_vs(
+            r'nmake /nologo /f NTMakefile install SASLDB="LMDB" LMDB_INCLUDE="%(gtk_dir)s\\include" '
+            + r'GSSAPI="MITKerberos" GSSAPILIB="'
+            + gssapilib
+            + r'" GSSAPI_INCLUDE="%(gtk_dir)s\\include" GSSAPI_LIBPATH="%(gtk_dir)s\\lib" '
+            + r'LMDB_LIBPATH="%(gtk_dir)s\\lib" OPENSSL_INCLUDE="%(gtk_dir)s\\include" OPENSSL_LIBPATH="%(gtk_dir)s\\lib" prefix="%(pkg_dir)s" CFG='
+            + configuration
+        )
 
-        self.install(r'.\COPYING share\doc\cyrus-sasl')
+        self.install(r".\COPYING share\doc\cyrus-sasl")
         self.install_pc_files()
 
 
@@ -190,7 +185,7 @@ class Project_dcv_color_primitives(Tarball, Meson):
             archive_url = 'https://github.com/aws/dcv-color-primitives/archive/v0.1.8.tar.gz',
             archive_file_name = 'dcv-color-primitives-0.1.8.tar.gz',
             hash = '467277ba9484c3d1ff9e7eeb7e4cea04c28526a0229f6bbeda4f472d08a5e7ca',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'cargo'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'cargo'],
             )
 
     def build(self):
@@ -206,7 +201,7 @@ class Project_emeus(GitRepo, Meson):
             repo_url = 'https://github.com/ebassi/emeus.git',
             fetch_submodules = False,
             tag = None,
-            dependencies = ['ninja', 'meson', 'pkg-config', 'gtk3'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'gtk3'],
             patches = [
                 '00_win_no_script.patch'
                 ],
@@ -242,7 +237,7 @@ class Project_enchant(Tarball, Project):
         self.push_location(r'.\src')
 
         #Exec nmake /nologo -f makefile.mak clean
-        self.exec_vs(r'nmake /nologo -f makefile.mak DLL=1 ' + x64_param + ' MFLAGS=-MD GLIBDIR=%(gtk_dir)s\include\glib-2.0')
+        self.exec_vs(r'nmake /nologo -f makefile.mak DLL=1 ' + x64_param + ' MFLAGS=-MD GLIBDIR=%(gtk_dir)s\\include\\glib-2.0')
 
         self.pop_location()
 
@@ -284,7 +279,7 @@ class Project_ffmpeg(Tarball, Project):
             'ffmpeg',
             archive_url = 'https://www.ffmpeg.org/releases/ffmpeg-4.2.2.tar.xz',
             hash = 'cb754255ab0ee2ea5f66f8850e1bd6ad5cac1cd855d0a2f4990fb8c668b0d29c',
-            dependencies = [ 'nasm', 'msys2', 'pkg-config', 'nv-codec-headers' ],
+            dependencies = [ 'nasm', 'msys2', 'pkgconf', 'nv-codec-headers' ],
         )
         if self.opts.ffmpeg_enable_gpl:
             self.add_dependency('x264')
@@ -309,150 +304,220 @@ class Project_ffmpeg(Tarball, Project):
         self.builder.exec_msys(['mv', 'swscale.lib', '../lib/'], working_dir=os.path.join(self.builder.gtk_dir, 'bin'))
 
 @project_add
-class Project_fontconfig(Tarball, Project):
+class Project_fontconfig(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'fontconfig',
-            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.13.0.tar.gz',
-            hash = 'a6ca290637d8b2c4e1dd40549b179202977593f7481ec83ddfb1765ad90037ba',
-            dependencies = ['freetype', 'libxml2'],
-            patches = ['fontconfig.patch'],
+            archive_url = 'https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.gz',
+            hash = 'f5f359d6332861bd497570848fcb42520964a9e83d5e3abe397b6b6db9bcaaf4',
+            dependencies = ['freetype', 'gperf', 'expat'],
+            patches = [],
             )
 
     def build(self):
-        #make the fontconfig files work on other compatible vs versions
-        for proj in glob.glob(r'%s\*.vcxproj' % (self.build_dir,)):
-            with open(proj, 'r') as f:
-                content = f.read()
-            if content.find('<PlatformToolset>FIXME</PlatformToolset>') >= 0:
-                log.debug('patching project file %s' % (proj,))
-                if self.builder.opts.vs_ver == '16':
-                    fixme = r'142'
-                elif self.builder.opts.vs_ver == '15':
-                    fixme = r'141'
-                else:
-                    fixme = self.builder.opts.vs_ver + r'0'
-                content = content.replace('<PlatformToolset>FIXME</PlatformToolset>', '<PlatformToolset>v%s</PlatformToolset>' % (fixme))
-                with open(proj, 'w') as f:
-                    f.write(content)
-
-        self.exec_msbuild('fontconfig.sln /t:build')
-
-        if self.builder.x86:
-            rel_dir = r'.\%(configuration)s'
-        else:
-            rel_dir = r'.\x64\%(configuration)s'
-
-        self.push_location(rel_dir)
-        self.install('fontconfig.dll', 'fontconfig.pdb', 'fc-cache.exe', 'fc-cache.pdb', 'fc-cat.exe', 'fc-cat.pdb', 'fc-list.exe', 'fc-list.pdb',
-                     'fc-match.exe', 'fc-match.pdb', 'fc-query.exe', 'fc-query.pdb', 'fc-scan.exe', 'fc-scan.pdb', 'bin')
-        self.pop_location()
-
-        self.install(r'fonts.conf fonts.dtd etc\fonts')
-        self.install(r'.\fontconfig\fcfreetype.h .\fontconfig\fcprivate.h .\fontconfig\fontconfig.h include\fontconfig')
-
-        self.push_location(rel_dir)
-        self.install('fontconfig.lib', 'lib')
-        self.pop_location()
-
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\fontconfig')
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\fontconfig")
 
 @project_add
-class Project_freetype(Tarball, CmakeProject):
+class Expat(Tarball, CmakeProject):
     def __init__(self):
-        Project.__init__(self,
-            'freetype',
-            archive_url = 'http://git.savannah.gnu.org/cgit/freetype/freetype2.git/snapshot/freetype2-098dd70cb1845b8c325ef4801c5f2e09e476b1ed.tar.gz',
-            hash = 'c891891164a716acbcf7137585c2ef1bc27599d2815b3c099a31d6a5a2e67a72',
-            dependencies = ['pkg-config', 'ninja', 'libpng'],
-            )
+        Project.__init__(
+            self,
+            "expat",
+            repository="libexpat",
+            archive_url="https://github.com/libexpat/libexpat/releases/download/R_2_6_4/expat-2.6.4.tar.xz",
+            hash="a695629dae047055b37d50a0ff4776d1d45d0a4c842cf4ccee158441f55ff7ee",
+            dependencies=["cmake", "ninja"],
+            patches=["0001-CMakeLists-do-not-add-postfix-d-in-debug-builds.patch"],
+        )
 
     def build(self):
-        CmakeProject.build(self, cmake_params='-DWITH_ZLIB=ON -DWITH_PNG=ON -DDISABLE_FORCE_DEBUG_POSTFIX=ON -DBUILD_SHARED_LIBS=ON', use_ninja=True)
-        self.install_pc_files()
-        self.install(r'.\docs\LICENSE.TXT share\doc\freetype')
+        CmakeProject.build(self, use_ninja=True)
+        self.install(r".\COPYING share\doc\expat")
 
 @project_add
-class Project_fribidi(GitRepo, Meson):
+class Gperf(GitRepo, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'fribidi',
-            repo_url = 'https://github.com/fribidi/fribidi.git',
-            fetch_submodules = False,
-            tag = 'f2c9d50722cb60d0cdec3b1bafba9029770e86b4',
-            dependencies = ['ninja', 'meson'],
-            )
+        Meson.__init__(
+            self,
+            "gperf",
+            repo_url="https://gitlab.freedesktop.org/tpm/gperf.git",
+            fetch_submodules=False,
+            tag="c24359b4eab86d71c655c3b3fc969f13aac879ce",
+            dependencies=["ninja"],
+        )
 
     def build(self):
-        Meson.build(self, meson_params='-Ddocs=false')
-        self.install(r'.\COPYING share\doc\fribidi')
+        Meson.build(self)
+        self.install(r"COPYING share\doc\gperf")
+
+@project_add
+class Freetype(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "freetype",
+            archive_url="https://gitlab.freedesktop.org/freetype/freetype/-/archive/VER-2-13-3/freetype-VER-2-13-3.tar.gz",
+            hash="bc5c898e4756d373e0d991bab053036c5eb2aa7c0d5c67e8662ddc6da40c4103",
+            dependencies=["pkgconf", "ninja", "libpng"],
+            patches=["0001-meson-in-shared-libraries-we-need-to-export-the-meth.patch"],
+        )
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\docs\LICENSE.TXT share\doc\freetype")
+
+@project_add
+class PkgConf(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "pkgconf",
+            archive_url="https://distfiles.ariadne.space/pkgconf/pkgconf-2.3.0.tar.gz",
+            hash="a2df680578e85f609f2fa67bd3d0fc0dc71b4bf084fc49119de84cd6ed28e723",
+            dependencies=["ninja", "meson"],
+            patches=["0001-libpkgconf-add-defines-to-unbreak-build-with-VS2013.patch"],
+        )
+        self.add_param("-Dtests=disabled")
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\pkgconf")
+
+    def post_install(self):
+        self.exec_cmd(
+            r"copy %(gtk_dir)s\bin\pkgconf.exe %(gtk_dir)s\bin\pkg-config.exe"
+        )
+
+@project_add
+class Fribidi(Tarball, Meson):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "fribidi",
+            archive_url="https://github.com/fribidi/fribidi/releases/download/v1.0.16/fribidi-1.0.16.tar.xz",
+            hash="1b1cde5b235d40479e91be2f0e88a309e3214c8ab470ec8a2744d82a5a9ea05c",
+            dependencies=["ninja", "meson"],
+        )
+
+    def build(self):
+        Meson.build(self, meson_params="-Ddocs=false")
+        self.install(r".\COPYING share\doc\fribidi")
 
 @project_add
 class Project_gdk_pixbuf(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'gdk-pixbuf',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gdk-pixbuf/2.40/gdk-pixbuf-2.40.0.tar.xz',
-            hash = '1582595099537ca8ff3b99c6804350b4c058bb8ad67411bbaae024ee7cead4e6',
+            archive_url = 'https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.12.tar.xz',
+            hash = 'b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7',
             dependencies = [
-                'ninja',
-                'pkg-config',
-                'meson',
-                'python',
-                'libtiff-4',
-                'jasper',
-                'glib',
-                'libpng',
+                "ninja",
+                "pkgconf",
+                "meson",
+                "libtiff-4",
+                "libjpeg-turbo",
+                "glib",
+                "libpng",
             ],
             )
         if self.opts.enable_gi:
-            self.add_dependency('gobject-introspection')
-            enable_gi = 'true'
+            self.add_dependency("gobject-introspection")
+            enable_gi = "enabled"
         else:
-            enable_gi = 'false'
+            enable_gi = "disabled"
 
-        self.add_param('-Djasper=true')
-        self.add_param('-Dnative_windows_loaders=false')
-        self.add_param('-Dgir=%s' % (enable_gi, ))
-        self.add_param('-Dman=false')
-        self.add_param('-Dx11=false')
+        self.add_param("-Dbuiltin_loaders=all")
+        self.add_param(f"-Dintrospection={enable_gi}")
+        self.add_param("-Dman=false")
+        self.add_param("-Dtests=false")
+        self.add_param("-Dgtk_doc=false")
 
     def build(self):
-        # We can experiment with a couple of options to give to meson:
-        #    -Dbuiltin_loaders=all|windows
-        #        Buld the loader inside the library
         Meson.build(self)
-        self.install(r'.\COPYING share\doc\gdk-pixbuf')
+        self.install(r".\COPYING share\doc\gdk-pixbuf")
 
     def post_install(self):
-        self.exec_cmd(r'%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache')
+        self.exec_cmd(r"%(gtk_dir)s\bin\gdk-pixbuf-query-loaders.exe --update-cache")
 
 @project_add
-class Project_gettext(Tarball, Project):
+class Gettext(Tarball, Project):
     def __init__(self):
-        Project.__init__(self,
-            'gettext',
-            archive_url = 'http://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.7.tar.gz',
-            hash = '5386d2a40500295783c6a52121adcf42a25519e2d23675950619c9e69558c23f',
-            dependencies = ['win-iconv'],
-            patches = ['0001-gettext-runtime-Add-pre-configured-headers-for-MSVC-.patch',
-                       '0001-gettext-tools-Add-pre-configured-headers-and-sources.patch',
-                       '0001-gettext-tools-gnulib-lib-libxml-Check-for-_WIN32-as-.patch',
-                       '0001-gettext-tools-Make-private-headers-C-friendly.patch',
-                       '0001-gettext-tools-src-x-lua.c-Fix-C99ism.patch',
-                       '0002-gettext-tools-gnulib-lib-Declare-items-at-top-of-blo.patch',
-                       '0004-gettext-runtime-intl-plural-exp.h-Match-up-declarati.patch',
-                       '0005-gettext-runtime-intl-printf-parse.c-Fix-build-on-Vis.patch',
-                       '0006-gettext-intrinsics.patch'],
-            )
+        Project.__init__(
+            self,
+            "gettext",
+            archive_url="http://ftp.gnu.org/pub/gnu/gettext/gettext-0.21.tar.xz",
+            hash="d20fcbb537e02dcf1383197ba05bd0734ef7bf5db06bdb241eb69b7d16b73192",
+            dependencies=["win-iconv"],
+            patches=[
+                "gettext-runtime-c99.patch",
+                "gettext-tools-c99.patch",
+                "gettext-tools-gnulib-memset.patch",
+                "libtextstyle-c99.patch",
+            ],
+        )
 
     def build(self):
-        self.exec_msbuild_gen(r'build\win32', 'gettext.sln')
+        self.push_location(r".\nmake")
+        self.exec_vs(
+            r'nmake /nologo /f Makefile.vc CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PREFIX="%(gtk_dir)s"',
+            add_path=os.path.join(self.builder.opts.msys_dir, "usr", "bin"),
+        )
+        self.pop_location()
 
-        self.install(r'.\gettext-tools\its\*.its share\gettext\its')
-        self.install(r'.\gettext-tools\its\*.loc share\gettext\its')
-        self.install(r'.\COPYING share\doc\gettext')
+        self.push_location(
+            r".\nmake\vs%s\%s\%s"
+            % (
+                self.builder.opts.vs_ver,
+                self.builder.opts.configuration,
+                self.builder.opts.platform,
+            )
+        )
+        self.install(r".\asprintf.dll bin")
+        self.install(r".\asprintf.pdb bin")
+        self.install(r".\intl.dll bin")
+        self.install(r".\intl.pdb bin")
+        self.install(r".\envsubst.exe bin")
+        self.install(r".\envsubst.pdb bin")
+        self.install(r".\gettext.exe bin")
+        self.install(r".\gettext.pdb bin")
+        self.install(r".\ngettext.exe bin")
+        self.install(r".\ngettext.pdb bin")
+        self.install(r".\gettextpo.dll bin")
+        self.install(r".\gettextpo.pdb bin")
+        self.install(r".\gettextlib-*.dll bin")
+        self.install(r".\gettextlib-*.pdb bin")
+        self.install(r".\gettextsrc-*.dll bin")
+        self.install(r".\gettextsrc-*.pdb bin")
+        self.install(r".\msg*.exe bin")
+        self.install(r".\msg*.pdb bin")
+        self.install(r".\xgettext.exe bin")
+        self.install(r".\xgettext.pdb bin")
+        self.install(r".\recode-sr-latin.exe bin")
+        self.install(r".\recode-sr-latin.pdb bin")
+        self.install(r".\textstyle.dll bin")
+        self.install(r".\textstyle.pdb bin")
+
+        self.install(r".\asprintf.lib lib")
+        self.install(r".\intl.lib lib")
+        self.install(r".\gettextpo.lib lib")
+        self.pop_location()
+
+        self.push_location(r".\msvc")
+        self.install(r".\gettext-runtime\libasprintf\autosprintf.h include")
+        self.install(r".\gettext-runtime\intl\libgnuintl.h include")
+        self.install(r".\gettext-tools\libgettextpo\gettext-po.h include")
+        self.pop_location()
+
+        self.install(r".\gettext-tools\its\*.its share\gettext\its")
+        self.install(r".\gettext-tools\its\*.loc share\gettext\its")
+        self.install(r".\COPYING share\doc\gettext")
+
+    def post_install(self):
+        self.builder.exec_msys(
+            ["mv", "libgnuintl.h", "libintl.h"],
+            working_dir=os.path.join(self.builder.gtk_dir, "include"),
+        )
 
 @project_add
 class Project_glib(Tarball, Meson):
@@ -461,7 +526,7 @@ class Project_glib(Tarball, Meson):
             'glib',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib/2.82/glib-2.82.2.tar.xz',
             hash = 'ab45f5a323048b1659ee0fbda5cecd94b099ab3e4b9abf26ae06aeb3e781fd63',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'gettext', 'libffi', 'zlib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'gettext', 'libffi', 'zlib'],
             patches = [
                 '001-glib-package-installation-directory.patch',
                 '0001-gsocket-windows-check-event-before-calling-WSAEnumNe.patch',
@@ -484,7 +549,7 @@ class Project_glib_networking(Tarball, Meson):
             'glib-networking',
             archive_url = 'https://ftp.acc.umu.se/pub/gnome/sources/glib-networking/2.64/glib-networking-2.64.1.tar.xz',
             hash = 'a4c346def7d817467d79a95c23b3ccf22e4df1548870726b63396400852daf72',
-            dependencies = ['pkg-config', 'ninja', 'meson', 'glib', 'openssl'],
+            dependencies = ['pkgconf', 'ninja', 'meson', 'glib', 'openssl'],
             )
 
     def build(self):
@@ -511,7 +576,7 @@ class Project_glib_openssl(Tarball, Meson):
             'glib-openssl',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/glib-openssl/2.50/glib-openssl-2.50.8.tar.xz',
             hash = '869f08e4e9a719c1df411c2fb5554400f6b24a9db0cb94c4359db8dad18d185f',
-            dependencies = ['pkg-config', 'ninja', 'meson', 'glib', 'openssl'],
+            dependencies = ['pkgconf', 'ninja', 'meson', 'glib', 'openssl'],
             )
 
     def build(self):
@@ -530,7 +595,7 @@ class Project_gobject_introspection(Tarball, Meson):
                 'ninja',
                 'meson',
                 'msys2',
-                'pkg-config',
+                'pkgconf',
                 'glib',
                 ],
             )
@@ -558,7 +623,7 @@ class Project_graphene(GitRepo, Meson):
             repo_url = 'https://github.com/ebassi/graphene',
             fetch_submodules = False,
             tag = None,
-            dependencies = ['ninja', 'meson', 'pkg-config', 'glib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'glib'],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -605,7 +670,7 @@ class Project_gsettings_desktop_schemas(Tarball, Meson):
             'gsettings-desktop-schemas',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/gsettings-desktop-schemas/3.36/gsettings-desktop-schemas-3.36.0.tar.xz',
             hash = '764ab683286536324533a58d4e95fc57f81adaba7d880dd0ebbbced63e960ea6',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'python', 'glib'],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'python', 'glib'],
             patches = [
                 '0003-source-for-dll-in-windows.patch',
                 ],
@@ -807,6 +872,13 @@ class Project_gtk3_20(Project_gtk_base):
             self.add_dependency('gobject-introspection')
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         self.exec_msbuild_gen(r'build\win32', 'gtk+.sln',  add_pars='/p:GtkPostInstall=rem')
 
         self.make_all_mo()
@@ -837,6 +909,13 @@ class Project_gtk3_22(Project_gtk_base):
             self.add_dependency('gobject-introspection')
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         self.exec_msbuild_gen(r'build\win32', 'gtk+.sln',  add_pars='/p:GtkPostInstall=rem')
 
         self.make_all_mo()
@@ -875,6 +954,13 @@ class Project_gtk3_24(Tarball, Meson):
         self.add_param('-Dintrospection=%s' % (enable_gi, ))
 
     def build(self):
+        self.builder.mod_env('INCLUDE', '%s\\include\\atk-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\gdk-pixbuf-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\glib-2.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\harfbuzz' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\include\\pango-1.0' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
         Meson.build(self, meson_params='-Dtests=false -Ddemos=false -Dexamples=false')
 
         self.install(r'.\COPYING share\doc\gtk3')
@@ -904,20 +990,27 @@ class Project_gtksourceview3(Tarball, Project, _MakeGir):
             self.make_single_gir('gtksourceview', prj_dir='gtksourceview3')
 
 @project_add
-class Project_harfbuzz(Tarball, CmakeProject):
+class Project_harfbuzz(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'harfbuzz',
-            archive_url = 'https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-2.6.4.tar.xz',
-            hash = '9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12',
-            dependencies = ['python', 'freetype', 'pkg-config', 'glib'],
+            archive_url = 'https://github.com/harfbuzz/harfbuzz/releases/download/10.1.0/harfbuzz-10.1.0.tar.xz',
+            hash = '6ce3520f2d089a33cef0fc48321334b8e0b72141f6a763719aaaecd2779ecb82',
+            dependencies = ['python', 'freetype', 'pkgconf', 'glib'],
             )
 
-    def build(self):
-        CmakeProject.build(self, cmake_params='-DHB_HAVE_FREETYPE=ON -DHB_HAVE_GLIB=ON -DHB_HAVE_GOBJECT=ON', use_ninja=True)
+        if Project.opts.enable_gi:
+            self.add_dependency("gobject-introspection")
+            self.add_param("-Dintrospection=enabled")
+        else:
+            self.add_param("-Dintrospection=disabled")
 
-        self.install_pc_files()
-        self.install(r'.\COPYING share\doc\harfbuzz')
+        self.add_param("-Ddirectwrite=enabled")
+        self.add_param("-Dgdi=enabled")
+
+    def build(self):
+        Meson.build(self)
+        self.install(r".\COPYING share\doc\harfbuzz")
 
 @project_add
 class Project_hicolor_icon_theme(Tarball, Project):
@@ -1006,7 +1099,7 @@ class Project_json_glib(Tarball, Meson):
             'json-glib',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/json-glib/1.4/json-glib-1.4.4.tar.xz',
             hash = '720c5f4379513dc11fd97dc75336eb0c0d3338c53128044d9fabec4374f4bc47',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'python', 'glib'],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'python', 'glib'],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -1088,22 +1181,19 @@ class Project_libepoxy(Tarball, Meson):
         self.install(r'COPYING share\doc\libepoxy')
 
 @project_add
-class Project_libffi(GitRepo, Meson):
+class Libffi(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'libffi',
-            repo_url = 'https://github.com/centricular/libffi.git',
-            fetch_submodules = False,
-            tag = 'meson-1.14',
-            dependencies = ['python', 'ninja', 'meson'],
-            patches = [
-                 '001-rename-debug-to-ffi-debug.patch',
-                 ],
-            )
+        Project.__init__(
+            self,
+            "libffi",
+            version="3.4.6",
+            archive_url="https://github.com/libffi/libffi/releases/download/v3.4.6/libffi-3.4.6.tar.gz",
+            dependencies=["ninja", "meson"],
+        )
 
     def build(self):
-        Meson.build(self)
-        self.install(r'LICENSE share\doc\libffi')
+        Meson.build(self, meson_params="-Dtests=false")
+        self.install(r"LICENSE share\doc\libffi")
 
 @project_add
 class Project_libgxps(Tarball, Meson):
@@ -1112,7 +1202,7 @@ class Project_libgxps(Tarball, Meson):
             'libgxps',
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/libgxps/0.3/libgxps-0.3.1.tar.xz',
             hash = '1a939fc8fcea9471b7eca46b1ac90cff89a30d26f65c7c9a375a4bf91223fa94',
-            dependencies = ['meson', 'ninja', 'pkg-config', 'glib', 'libarchive', 'cairo', 'libpng', 'libjpeg-turbo', 'libtiff-4', 'gtk3', ],
+            dependencies = ['meson', 'ninja', 'pkgconf', 'glib', 'libarchive', 'cairo', 'libpng', 'libjpeg-turbo', 'libtiff-4', 'gtk3', ],
             )
         if self.opts.enable_gi:
             self.add_dependency('gobject-introspection')
@@ -1181,20 +1271,22 @@ class Project_libmicrohttpd(Tarball, Project):
         self.install(r'.\COPYING share\doc\libmicrohttpd')
 
 @project_add
-class Project_libpng(Tarball, CmakeProject):
+class Libpng(Tarball, CmakeProject):
     def __init__(self):
-        Project.__init__(self,
-            'libpng',
-            archive_url = 'http://prdownloads.sourceforge.net/libpng/libpng-1.6.37.tar.xz',
-            hash = '505e70834d35383537b6491e7ae8641f1a4bed1876dbfe361201fc80868d88ca',
-            dependencies = ['cmake', 'ninja', 'zlib'],
-            )
+        Project.__init__(
+            self,
+            "libpng",
+            archive_url="https://github.com/pnggroup/libpng/archive/v1.6.44.tar.gz",
+            hash="0ef5b633d0c65f780c4fced27ff832998e71478c13b45dfb6e94f23a82f64f7c",
+            dependencies=["cmake", "ninja", "zlib"],
+        )
 
     def build(self):
-        CmakeProject.build(self, use_ninja=True)
+        cmake_params = '-DPNG_TOOLS=OFF -DPNG_TESTS=OFF -Dld-version-script=OFF -DPNG_DEBUG_POSTFIX=""'
+        CmakeProject.build(self, cmake_params=cmake_params, use_ninja=True)
 
         self.install_pc_files()
-        self.install('LICENSE share\doc\libpng')
+        self.install(r"LICENSE share\doc\libpng")
 
 @project_add
 class Project_libpsl(GitRepo, Meson):
@@ -1204,7 +1296,7 @@ class Project_libpsl(GitRepo, Meson):
             repo_url = 'https://github.com/rockdaboot/libpsl.git',
             fetch_submodules = True,
             tag = 'b32e81367ce91388e94bd34c54e7297063857d66',
-            dependencies = ['python', 'meson', 'ninja', 'pkg-config', 'icu', ],
+            dependencies = ['python', 'meson', 'ninja', 'pkgconf', 'icu', ],
             )
 
         self.add_param('-Druntime=libicu')
@@ -1228,7 +1320,7 @@ class Project_librsvg(Tarball, Project, _MakeGir):
 
     def build(self):
         self.builder.mod_env('INCLUDE', '%s\\include\\cairo' % (self.builder.gtk_dir, ))
-        self.builder.mod_env('INCLUDE', '%s\\lib\glib-2.0\include' % (self.builder.gtk_dir, ))
+        self.builder.mod_env('INCLUDE', '%s\\lib\\glib-2.0\\include' % (self.builder.gtk_dir, ))
 
         self.push_location('win32')
         self.exec_vs(r'nmake install -f Makefile.vc CFG=%(configuration)s PYTHON="%(python_dir)s\python.exe" PREFIX="%(gtk_dir)s"')
@@ -1373,19 +1465,24 @@ class Project_libuv(Tarball, CmakeProject):
         self.install(r'.\_gvsbuild-cmake\uv_a.lib lib')
 
 @project_add
-class Project_libxml2(Tarball, Meson):
+class Libxml2(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'libxml2',
-            archive_url = 'http://xmlsoft.org/sources/libxml2-2.9.10.tar.gz',
-            hash = 'aafee193ffb8fe0c82d4afef6ef91972cbaf5feea100edc2f262750611b4be1f',
-            dependencies = ['win-iconv', 'meson', 'ninja'],
-            )
+        Project.__init__(
+            self,
+            "libxml2",
+            version="2.12.9",
+            lastversion_even=True,
+            repository="https://gitlab.gnome.org/GNOME/libxml2",
+            archive_url="https://download.gnome.org/sources/libxml2/2.12/libxml2-2.12.9.tar.xz",
+            hash="59912db536ab56a3996489ea0299768c7bcffe57169f0235e7f962a91f483590",
+            dependencies=["win-iconv", "meson", "ninja"],
+            patches=[],
+        )
 
     def build(self):
         Meson.build(self)
         self.install_pc_files()
-        self.install(r'.\COPYING share\doc\libxml2')
+        self.install(r".\COPYING share\doc\libxml2")
 
 @project_add
 class Project_libyuv(GitRepo, CmakeProject):
@@ -1436,9 +1533,9 @@ class Project_lmdb(GitRepo, Meson):
             )
 
     def build(self):
-        self.push_location(r'.\libraries\liblmdb')
+        self.push_location(r'.\\libraries\\liblmdb')
         Meson.build(self)
-        self.install('LICENSE share\doc\lmdb')
+        self.install('LICENSE share\\doc\\lmdb')
         self.pop_location()
 
 @project_add
@@ -1620,8 +1717,8 @@ class Project_pango(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'pango',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/pango/1.44/pango-1.44.7.tar.xz',
-            hash = '66a5b6cc13db73efed67b8e933584509f8ddb7b10a8a40c3850ca4a985ea1b1f',
+            archive_url = 'https://download.gnome.org/sources/pango//1.54/pango-1.54.0.tar.xz',
+            hash = '8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8',
             dependencies = [
                 'ninja',
                 'meson',
@@ -1629,76 +1726,40 @@ class Project_pango(Tarball, Meson):
                 'harfbuzz',
                 'fribidi',
             ],
-            patches = [
-                '001-ignore-help2man.patch',
-                '002-win32-load-aliases.patch',
-                '003-win32-font-corruption.patch',
-                '004-win32-thread-corruption.patch',
-                '005-win32-pango-aliases.patch',
-            ],
+            patches = [],
             )
         if self.opts.enable_gi:
-            self.add_dependency('gobject-introspection')
-            enable_gi = 'true'
+            self.add_dependency("gobject-introspection")
+            enable_gi = "enabled"
         else:
-            enable_gi = 'false'
+            enable_gi = "disabled"
 
-        self.add_param('-Dintrospection=%s' % (enable_gi, ))
+        self.add_param(f"-Dintrospection={enable_gi}")
+        self.add_param("-Dfreetype=enabled")
 
     def build(self):
         Meson.build(self)
-        self.install(r'COPYING share\doc\pango')
+        self.install(r"COPYING share\doc\pango")
 
 @project_add
-class Project_pixman(Tarball, Project):
+class Pixman(Tarball, Meson):
     def __init__(self):
-        Project.__init__(self,
-            'pixman',
-            archive_url = 'http://cairographics.org/releases/pixman-0.38.4.tar.gz',
-            hash = 'da66d6fd6e40aee70f7bd02e4f8f76fc3f006ec879d346bae6a723025cfbdde7',
-            )
+        Project.__init__(
+            self,
+            "pixman",
+            archive_url="http://cairographics.org/releases/pixman-0.44.0.tar.gz",
+            hash="89a4c1e1e45e0b23dffe708202cb2eaffde0fe3727d7692b2e1739fec78a7dac",
+            dependencies=["ninja", "meson"],
+        )
 
     def build(self):
-        optimizations = 'SSE2=on SSSE3=on'
-        if self.builder.x64:
-            # FIXME: cairo fails to build due to missing symbols if I enable MMX on 64bit
-            optimizations += ' MMX=off'
-        else:
-            optimizations += ' MMX=on'
+        enable_mmx = "disabled" if self.builder.x64 else "enabled"
+        Meson.build(
+            self,
+            meson_params=f"-Dsse2=enabled -Dssse3=enabled -Dmmx={enable_mmx} -Dtests=disabled",
+        )
 
-        add_path = os.path.join(self.builder.opts.msys_dir, 'usr', 'bin')
-
-        self.exec_vs(r'make -f Makefile.win32 pixman CFG=%(configuration)s ' + optimizations, add_path=add_path)
-
-        self.install(r'.\pixman\%(configuration)s\pixman-1.lib lib')
-
-        self.install(r'.\pixman\pixman.h include\pixman-1')
-        self.install(r'.\pixman\pixman-version.h include\pixman-1')
-
-        self.install(r'.\COPYING share\doc\pixman')
-
-@project_add
-class Project_pkgconf(GitRepo, Meson):
-    def __init__(self):
-        GitRepo.__init__(self)
-        Project.__init__(self,
-            'pkg-config',
-            prj_dir = 'pkgconf',
-            repo_url = 'https://github.com/pkgconf/pkgconf.git',
-            fetch_submodules = False,
-            tag = 'pkgconf-1.5.4',
-            dependencies = ['ninja', 'meson'],
-            patches = [ '0001-vs2013.patch',
-                      ],
-            )
-        self.add_param('-Dtests=false')
-
-    def build(self):
-        Meson.build(self)
-        self.install(r'.\COPYING share\doc\pkgconf')
-
-    def post_install(self):
-        self.exec_cmd(r'copy %(gtk_dir)s\bin\pkgconf.exe %(gtk_dir)s\bin\pkg-config.exe')
+        self.install(r".\COPYING share\doc\pixman")
 
 @project_add
 class Project_portaudio(Tarball, CmakeProject):
@@ -1867,7 +1928,7 @@ class Project_wing(Tarball, Meson):
             'wing',
             archive_url = 'https://gitlab.gnome.org/GNOME/wing/-/archive/v0.3.4/wing-v0.3.4.tar.gz',
             hash = '7eb01cbfa33988349514963d669f1a86f4bf0a2afff0f8eabf10292f3de7ef8a',
-            dependencies = ['ninja', 'meson', 'pkg-config', 'glib'],
+            dependencies = ['ninja', 'meson', 'pkgconf', 'glib'],
             )
 
     def build(self):
@@ -1930,7 +1991,7 @@ class Project_check_libs(NullExpander, Meson):
                     # Used to build the various tests
                     'meson',
                     'ninja',
-                    'pkg-config',
+                    'pkgconf',
                     # libraries to test, hopefully all the one we build!
                     'atk',
                     'cairo',

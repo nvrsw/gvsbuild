@@ -69,9 +69,9 @@ class Tool_cmake(Tool):
     def __init__(self):
         Tool.__init__(self,
             'cmake',
-            archive_url = 'https://cmake.org/files/v3.7/cmake-3.7.2-win64-x64.zip',
-            hash = 'def3bb81dfd922ce1ea2a0647645eefb60e128d520c8ca707c5996c331bc8b48',
-            dir_part = 'cmake-3.7.2-win64-x64')
+            archive_url = 'https://cmake.org/files/v3.31/cmake-3.31.2-windows-x86_64.zip',
+            hash = '109c29a744d648863d3637b4963c90088045c8d92799c68c9b9d8713407776c8',
+            dir_part = 'cmake-3.31.2-win64-x64')
 
     def load_defaults(self):
         Tool.load_defaults(self)
@@ -132,10 +132,10 @@ class Tool_ninja(Tool):
     def __init__(self):
         Tool.__init__(self,
             'ninja',
-            archive_url = 'https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip',
-            archive_file_name = 'ninja-win-1.8.2.zip',
-            hash = 'c80313e6c26c0b9e0c241504718e2d8bbc2798b73429933adf03fdc6d84f0e70',
-            dir_part = 'ninja-1.8.2',
+            archive_url = 'https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip',
+            archive_file_name = 'ninja-win-1.12.1.zip',
+            hash = 'f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a',
+            dir_part = 'ninja-1.12.1',
             exe_name = 'ninja.exe')
 
     def unpack(self):

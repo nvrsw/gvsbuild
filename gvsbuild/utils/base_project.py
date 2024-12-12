@@ -211,6 +211,10 @@ class Project(object):
                 '16': [ ( 'vs15', 141, True, ), ('vs2017', 141, False, ),
                         ( 'vs14', 140, True, ), ('vs2015', 140, False, ),
                         ( 'vs12', 120, True, ), ('vs2013', 120, False, ), ],
+                '17': [ ( 'vs16', 142, True, ), ('vs2019', 142, False, ),
+                        ( 'vs15', 141, True, ), ('vs2017', 141, False, ),
+                        ( 'vs14', 140, True, ), ('vs2015', 140, False, ),
+                        ( 'vs12', 120, True, ), ('vs2013', 120, False, ), ],
                 }
             lst = look.get(self.builder.opts.vs_ver, [])
             for p in lst:
