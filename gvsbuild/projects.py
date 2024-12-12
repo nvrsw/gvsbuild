@@ -107,7 +107,7 @@ class Project_clutter(Tarball, Project):
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.4.tar.xz',
             hash = '8b48fac159843f556d0a6be3dbfc6b083fc6d9c58a20a49a6b4919ab4263c4e6',
             dependencies = ['atk','cogl','json-glib'],
-            patches = ['001-input-method-editor.patch'],
+            patches = ['001-input-method-editor.patch', '002-void-return-error.patch'],
             )
 
     def build(self):
@@ -121,8 +121,8 @@ class Project_cogl(Tarball, Project):
     def __init__(self):
         Project.__init__(self,
             'cogl',
-            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.6.tar.xz',
-            hash = '6d134bd3e48c067507167c001200b275997fb9c68b08b48ff038211c8c251b75',
+            archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/cogl/1.22/cogl-1.22.8.tar.xz',
+            hash = 'a805b2b019184710ff53d0496f9f0ce6dcca420c141a0f4f6fcc02131581d759',
             dependencies = ['python', 'glib','cairo','pango','gdk-pixbuf'],
             patches = ['001-cogl-missing-symbols.patch',
                        '002-cogl-pango-missing-symbols.patch'],
