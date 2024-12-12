@@ -1713,13 +1713,12 @@ class Project_orc(Tarball, Meson):
         self.install(r'COPYING share\doc\orc')
 
 @project_add
-class Project_pango(GitRepo, Meson):
+class Project_pango(Tarball, Meson):
     def __init__(self):
         Project.__init__(self,
             'pango',
-            repo_url = 'https://github.com/GNOME/pango.git',
-            fetch_submodules = False,
-            tag = 'efd90cad0b1eeffe1c4d7f71cc0ee8986cc24e4c',
+            archive_url = 'https://download.gnome.org/sources/pango//1.54/pango-1.54.0.tar.xz',
+            hash = '8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8',
             dependencies = [
                 'ninja',
                 'meson',
