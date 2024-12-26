@@ -107,7 +107,7 @@ class Project_clutter(Tarball, Project):
             archive_url = 'http://ftp.acc.umu.se/pub/GNOME/sources/clutter/1.26/clutter-1.26.4.tar.xz',
             hash = '8b48fac159843f556d0a6be3dbfc6b083fc6d9c58a20a49a6b4919ab4263c4e6',
             dependencies = ['atk','cogl','json-glib'],
-            patches = ['001-input-method-editor.patch', '002-void-return-error.patch'],
+            patches = ['001-input-method-editor.patch', '002-void-return-error.patch', '003-clutter-text-freeze-notification.patch'],
             )
 
     def build(self):

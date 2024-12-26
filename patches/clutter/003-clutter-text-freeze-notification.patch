@@ -1,0 +1,12 @@
+diff --git a/clutter/clutter-text.c b/clutter/clutter-text.c
+index 0b83de9..3b71b7a 100644
+--- a/clutter/clutter-text.c
++++ b/clutter/clutter-text.c
+@@ -1500,7 +1500,6 @@ clutter_text_finalize (GObject *gobject)
+ 
+   clutter_text_dirty_paint_volume (self);
+ 
+-  clutter_text_set_buffer (self, NULL);
+   g_free (priv->font_name);
+ 
+   G_OBJECT_CLASS (clutter_text_parent_class)->finalize (gobject);
