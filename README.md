@@ -69,15 +69,15 @@ HexChat developers decided that their script should focus on their specific need
 1. To build CMS
 
     ```sh
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 16
-    python build.py build lz4 openssl gtk librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 16
+    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 17
+    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 17
     ```
 
 1. To build Kakudai Window Manager
 
     ```sh
-    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x86 --vs-ver 16
-    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x64 --vs-ver 16
+    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x86 --vs-ver 17
+    python build.py build clutter gtk3 json-c leveldb libcurl libjpeg-turbo libmicrohttpd librsvg libssh libuv libzip lz4 openssl protobuf-c -c release -p x64 --vs-ver 17
     ```
 
 1. When the script is done, your GTK+ stack will be found under _C:\gtk-build\gtk_. Enjoy!
