@@ -1,0 +1,26 @@
+diff --git a/clutter/clutter-text.c b/clutter/clutter-text.c
+index 0b83de9..e52aaab 100644
+--- a/clutter/clutter-text.c
++++ b/clutter/clutter-text.c
+@@ -1475,7 +1475,12 @@ clutter_text_dispose (GObject *gobject)
+       priv->password_hint_id = 0;
+     }
+ 
+-  clutter_text_set_buffer (self, NULL);
++  if (priv->buffer)
++    {
++      buffer_disconnect_signals (self);
++      g_clear_object (&priv->buffer);
++    }
++
+ 
+   G_OBJECT_CLASS (clutter_text_parent_class)->dispose (gobject);
+ }
+@@ -1500,7 +1505,6 @@ clutter_text_finalize (GObject *gobject)
+ 
+   clutter_text_dirty_paint_volume (self);
+ 
+-  clutter_text_set_buffer (self, NULL);
+   g_free (priv->font_name);
+ 
+   G_OBJECT_CLASS (clutter_text_parent_class)->finalize (gobject);
