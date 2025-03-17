@@ -2098,3 +2098,18 @@ class Project_dev_shell(Project):
         self.builder.mod_env('GTK_BASE_DIR', self.builder.gtk_dir)
         self.builder.mod_env('PROMPT', '[ gvsbuild shell ] $P $G', subst=True)
         self.builder.exec_vs("cmd", working_dir=self.builder.working_dir)
+
+@project_add
+class Project_vncserver(GitRepo, CmakeProject):
+    def __init__(self):
+        Project.__init__(self,
+            'vncserver',
+            repo_url = 'https://github.com/nvrsw/libvncserver.git',
+            fetch_submodules = True,
+            tag = None,
+            dependencies = ['libjpeg-turbo', 'zlib',],
+            patches = [],
+            )
+
+    def build(self):
+        CmakeProject.build(self, cmake_params='', use_ninja=True, out_of_source=False)
