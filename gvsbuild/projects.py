@@ -2107,9 +2107,17 @@ class Project_vncserver(GitRepo, CmakeProject):
             repo_url = 'https://github.com/nvrsw/libvncserver.git',
             fetch_submodules = True,
             tag = None,
-            dependencies = ['libjpeg-turbo', 'zlib',],
+            dependencies = ['libjpeg-turbo', 'libpng', 'openssl', 'zlib',],
             patches = [],
             )
 
     def build(self):
-        CmakeProject.build(self, cmake_params='', use_ninja=True, out_of_source=False)
+        CmakeProject.build(self,
+                           cmake_params=r'-DWITH_OPENSSL=ON'
+                                        r'-DWITH_GNUTLS=OFF'
+                                        r'-DWITH_GCRYPT=OFF'
+                                        r'-DWITH_ZLIB=ON'
+                                        r'-DWITH_JPEG=ON'
+                                        r'-DWITH_PNG=ON',
+                           use_ninja=True,
+                           out_of_source=False)
