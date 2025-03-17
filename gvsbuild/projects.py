@@ -2113,11 +2113,11 @@ class Project_vncserver(GitRepo, CmakeProject):
 
     def build(self):
         CmakeProject.build(self,
-                           cmake_params=r'-DWITH_OPENSSL=ON'
-                                        r'-DWITH_GNUTLS=OFF'
-                                        r'-DWITH_GCRYPT=OFF'
-                                        r'-DWITH_ZLIB=ON'
-                                        r'-DWITH_JPEG=ON'
-                                        r'-DWITH_PNG=ON',
+                           cmake_params=('-DWITH_OPENSSL=ON'
+                                         '-DWITH_GNUTLS=OFF'
+                                         '-DWITH_GCRYPT=OFF'
+                                         '-DWITH_ZLIB=ON'
+                                         '-DWITH_JPEG=ON'
+                                         '-DWITH_PNG=ON'),
                            use_ninja=True,
                            out_of_source=False)
