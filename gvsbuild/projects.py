@@ -341,9 +341,9 @@ class Gperf(GitRepo, Meson):
         Meson.__init__(
             self,
             "gperf",
-            repo_url="https://github.com/hsccr/gperf.git",
+            repo_url="https://github.com/rurban/gperf.git",
             fetch_submodules=False,
-            tag = None,
+            tag="c24359b4eab86d71c655c3b3fc969f13aac879ce",
             dependencies=["ninja"],
         )
 
