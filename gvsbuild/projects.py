@@ -341,7 +341,7 @@ class Gperf(GitRepo, Meson):
         Meson.__init__(
             self,
             "gperf",
-            repo_url="https://gitlab.freedesktop.org/tpm/gperf.git",
+            repo_url="https://github.com/rurban/gperf.git",
             fetch_submodules=False,
             tag="c24359b4eab86d71c655c3b3fc969f13aac879ce",
             dependencies=["ninja"],
@@ -2098,3 +2098,26 @@ class Project_dev_shell(Project):
         self.builder.mod_env('GTK_BASE_DIR', self.builder.gtk_dir)
         self.builder.mod_env('PROMPT', '[ gvsbuild shell ] $P $G', subst=True)
         self.builder.exec_vs("cmd", working_dir=self.builder.working_dir)
+
+@project_add
+class Project_vncserver(GitRepo, CmakeProject):
+    def __init__(self):
+        Project.__init__(self,
+            'vncserver',
+            repo_url = 'https://github.com/nvrsw/libvncserver.git',
+            fetch_submodules = True,
+            tag = None,
+            dependencies = ['libjpeg-turbo', 'libpng', 'openssl', 'zlib',],
+            patches = [],
+            )
+
+    def build(self):
+        CmakeProject.build(self,
+                           cmake_params=('-DWITH_OPENSSL=ON'
+                                         '-DWITH_GNUTLS=OFF'
+                                         '-DWITH_GCRYPT=OFF'
+                                         '-DWITH_ZLIB=ON'
+                                         '-DWITH_JPEG=ON'
+                                         '-DWITH_PNG=ON'),
+                           use_ninja=True,
+                           out_of_source=False)

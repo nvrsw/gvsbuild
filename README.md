@@ -25,7 +25,7 @@ HexChat developers decided that their script should focus on their specific need
     * [Visual C++ Redistributable Packages for Visual Studio 2013 for Perl 5.20.0](https://www.microsoft.com/ko-KR/download/details.aspx?id=40784)
 
 1. Environment PATH System Variables
-    * C:\Python37
+    * C:\Python313
 
 1. Follow the instructions on the msys2 page to update the core packages. The needed packages for the script (make, diffutils, ...) are download and installed automatically if not presents in the msys2 installation.
 
@@ -70,8 +70,8 @@ HexChat developers decided that their script should focus on their specific need
 1. To build CMS
 
     ```sh
-    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c -p x86 -c release --vs-ver 17
-    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c -p x64 -c release --vs-ver 17
+    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c vncserver -p x86 -c release --vs-ver 17
+    python build.py build lz4 openssl gtk clutter librsvg libssh libuv libcurl libjpeg-turbo json-c vncserver -p x64 -c release --vs-ver 17
     ```
 
 1. To build Kakudai Window Manager
