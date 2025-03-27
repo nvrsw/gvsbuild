@@ -2121,3 +2121,19 @@ class Project_vncserver(GitRepo, CmakeProject):
                                          '-DWITH_PNG=ON'),
                            use_ninja=True,
                            out_of_source=False)
+
+@project_add
+class Glew(Tarball, CmakeProject):
+    def __init__(self):
+        Project.__init__(
+            self,
+            "glew",
+            repository="glew",
+            archive_url="https://raw.github.com/hsccr/gtk-src/main/glew-2.1.0.tgz",
+            hash="04de91e7e6763039bc11940095cd9c7f880baba82196a7765f727ac05a993c95",
+            dependencies=["cmake", "ninja"],
+            patches=['001-cmake.patch'],
+        )
+
+    def build(self):
+        CmakeProject.build(self, cmake_params='-S build\cmake -B .')
