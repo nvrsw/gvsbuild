@@ -1,0 +1,22 @@
+diff --git a/meson_options.txt b/meson_options.txt
+index 7483015..2e71113 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -22,7 +22,7 @@ option('builtin_loaders',
+        description: 'Comma-separated list of loaders to build into gdk-pixbuf',
+        type: 'array',
+        choices: ['all', 'none', 'windows', 'png', 'bmp', 'gif', 'ico', 'ani', 'jpeg', 'pnm', 'tiff', 'xpm', 'xbm', 'tga', 'icns', 'qtif'],
+-       value: ['png', 'jpeg'])
++       value: ['all'])
+ option('gtk_doc',
+        description: 'Whether to generate the API reference',
+        type: 'boolean',
+@@ -48,7 +48,7 @@ option('relocatable',
+ option('native_windows_loaders',
+        description: 'Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option',
+        type: 'boolean',
+-       value: false)
++       value: true)
+ option('tests',
+        description: 'Build the test suite',
+        type: 'boolean',

@@ -420,6 +420,7 @@ class Project_gdk_pixbuf(Tarball, Meson):
                 "glib",
                 "libpng",
             ],
+            patches = ['001-enable-native-windows-loader.patch'],
             )
         if self.opts.enable_gi:
             self.add_dependency("gobject-introspection")
